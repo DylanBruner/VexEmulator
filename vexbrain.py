@@ -38,6 +38,8 @@ class BrainScreen(object):
         self.x = 0
         self.y = 0
 
+        self._drawProgramBar = False
+
         self._clickEventCallbacks   = []
         self.font = pygame.font.SysFont("monospace", 20)
 
@@ -57,6 +59,7 @@ class BrainScreen(object):
     def pressed(self, callback: callable): self._clickEventCallbacks.append(callback)
     def pressing(self) -> bool: return pygame.mouse.get_pressed()[0] and self.frame.get_rect().collidepoint(pygame.mouse.get_pos())
     def print(self, *args):
+        # sourcery skip: use-fstring-for-concatenation, use-join
         text = ""
         for arg in args:
             text += str(arg) + " "            
@@ -82,29 +85,34 @@ class BrainScreen(object):
             for event_callback in self._clickEventCallbacks:
                 event_callback()
         
-        pygame.draw.rect(self.frame, (0, 153, 203), (0, 0, 480, 33))
-        #Draw the program name on the left
-        text = self.font.render(self.programName, True, (255, 255, 255))
-        self.frame.blit(text, (0, 0))
-        #Display the time sience the program started in the middle of the top bar
-        text = self.font.render(time.strftime("%M:%S", time.gmtime(time.time() - self.startTime)), True, (255, 255, 255))
-        self.frame.blit(text, (self.size[0] / 2, 0))
+        if self._drawProgramBar:
+            pygame.draw.rect(self.frame, (0, 153, 203), (0, 0, 480, 33))
+            text = self.font.render(self.programName, True, (255, 255, 255))
+            self.frame.blit(text, (0, 0))
+            text = self.font.render(time.strftime("%M:%S", time.gmtime(time.time() - self.startTime)), True, (255, 255, 255))
+            self.frame.blit(text, (self.size[0] / 2, 0))
 
         window.blit(self.frame, self.location)
 
 class Brain(object):
     def __init__(self):
         self.window = pygame.display.set_mode((674, 466), pygame.NOFRAME)
+        self.BrainScreenSize = (480, 272)
 
         self.BrainFrameImage = pygame.image.load("data/images/brainoutline.png")
         self.BrainFrameImage = self.BrainFrameImage.convert_alpha()
         self.BrainFrameImage = RemoveColorRange(self.BrainFrameImage, 235, 255)
 
+        self.BrainHomeImage  = pygame.image.load("data/images/brainhomescreen.png")
+        self.BrainHomeImage  = self.BrainHomeImage.convert_alpha()
+        self.BrainHomeImage  = RemoveColorRange(self.BrainHomeImage, 254, 255)#Remove the little white vert line on the far right
+        self.BrainHomeImage  = pygame.transform.scale(self.BrainHomeImage, (self.BrainScreenSize[0] + 1, self.BrainScreenSize[1]))#Cover the white vert line thats now gone
+
+
         self.TransparentColor = (255, 0, 128)
 
         self.usedPorts = []
 
-        self.BrainScreenSize = (480, 272)
         self.BrainScreen     = BrainScreen(self.BrainScreenSize, (68, 110))
 
         self.hwnd = pygame.display.get_wm_info()['window']
@@ -116,6 +124,8 @@ class Brain(object):
         self.selectionStart  = None
         self.selectionStop   = None
 
+        self.isInProgram = False
+
         self.powerButtonRect = pygame.Rect((582, 217), (60, 60))
         self.topBar = pygame.Rect((10, 0), (648, 60))
 
@@ -124,19 +134,20 @@ class Brain(object):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-        
+
         if CheckCollision(self.powerButtonRect):
             pygame.quit(); quit()
         elif CheckCollision(self.topBar):
             #Allow the window to be dragged
             win32gui.SetWindowPos(self.hwnd, win32con.HWND_NOTOPMOST, win32api.GetCursorPos()[0], win32api.GetCursorPos()[1], 0, 0, win32con.SWP_NOSIZE)
-        
+
         self.window.fill((255, 0, 128))
-        
+
         self.window.blit(self.BrainFrameImage, (0, 0))
-
+        if not self.isInProgram:
+            self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))
+        
         self.BrainScreen._draw(self.window)
-
         pygame.display.update()
 
 class Timer(object):
