@@ -14,4 +14,5 @@ new_globals = {
     'MM': 'mm',
     'RIGHT': 'right',
     'LEFT': 'left',
+    'INCHES': 'inches',
 }
