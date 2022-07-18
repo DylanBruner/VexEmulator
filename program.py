@@ -1,5 +1,5 @@
 import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, vexcontroller, time
-from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation
+from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
 
 class ProgramFile(object):
     def __init__(self, filename: str):
@@ -21,6 +21,7 @@ class ProgramFile(object):
             'Distance': virtualdistance.Distance,
             'Magnet': virtualmagnet.Magnet,
             'Rotation': virtualrotation.Rotation,
+            'Optical': virtualoptical.Optical
         }
     
     def reloadContainerCode(self):
