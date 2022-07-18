@@ -38,9 +38,12 @@ class BrainScreen(object):
         self.x = 0
         self.y = 0
 
+        self.mouseDown = False
+
         self._drawProgramBar = False
 
         self._clickEventCallbacks   = []
+        self._releaseEventCallbacks = []
         self.font = pygame.font.SysFont("monospace", 20)
     
     def _getRelativeMouseLocation(self) -> tuple:
@@ -48,7 +51,10 @@ class BrainScreen(object):
 
     def set_pen_color(self, color: tuple): self.penColor = color
     def draw_pixel(self, x, y): self.frame.set_at((x, y + self.yOffsetPixels), self.penColor)
-    def clear_row(self, row): self.frame.fill((0, 0, 0), (0, row * self.size[1] / self.maxRows, (self.size[0], self.size[1] / self.maxRows) + self.yOffsetPixels))
+    def clear_row(self, row):
+        rowRect = pygame.Rect(0, ((row - 1)* self.size[1] / self.maxRows) + self.yOffsetPixels, self.size[0], self.size[1] / self.maxRows)
+        self.frame.fill((0, 0, 0), rowRect)
+    
     def clear_screen(self): self.frame.fill((0, 0, 0)); self.cCol = 0; self.cRow = 0
     def column(self): return self.col
     def row(self): return self.cRow
@@ -60,7 +66,8 @@ class BrainScreen(object):
 
     def next_row(self): self.cRow += 1; self.cCol = 0
     def pressed(self, callback: callable): self._clickEventCallbacks.append(callback)
-    def pressing(self) -> bool: return pygame.mouse.get_pressed()[0] and self.frame.get_rect().collidepoint(pygame.mouse.get_pos())
+    def release(self, callback: callable): self._releaseEventCallbacks.append(callback)
+    def pressing(self) -> bool: return self.mouseDown
     def print(self, *args):
         # sourcery skip: use-fstring-for-concatenation, use-join
         text = ""
@@ -77,16 +84,33 @@ class BrainScreen(object):
                 self.clear_row(0)
                 self.cRow = 1
                 self.cCol = 0
-    def set_cursor(self, row, column): self.cRow = row; self.cCol = column
+
+    def set_cursor(self, row, column): self.cRow = row - 1; self.cCol = column - 1
     def set_fill_color(self, color: tuple): self.fillColor = color
     def x_position(self): return self.x
-    def y_position(self): return self.y  + self.yOffsetPixels
+    def y_position(self): return self.y
     def set_pen_width(self, width: int): self.penWidth = width
     
     def _draw(self, window: pygame.Surface):
-        if pygame.mouse.get_pressed()[0] and self.frame.get_rect().collidepoint(pygame.mouse.get_pos()):
+        #Mouse events
+        checks = (
+            self._getRelativeMouseLocation()[0] <= self.size[0],
+            self._getRelativeMouseLocation()[0] >= 0,
+            self._getRelativeMouseLocation()[1] <= self.size[1],
+            self._getRelativeMouseLocation()[1] >= 0,
+            pygame.mouse.get_pressed()[0]
+        )
+
+        if all(checks) and not self.mouseDown:
+            self.mouseDown = True
+            self.x, self.y = self._getRelativeMouseLocation()
             for event_callback in self._clickEventCallbacks:
                 event_callback()
+        elif not all(checks) and self.mouseDown:
+            self.mouseDown = False
+            for event_callback in self._releaseEventCallbacks:
+                event_callback()
+
         
         if self._drawProgramBar:
             pygame.draw.rect(self.frame, (0, 153, 203), (0, 0, 480, 33))

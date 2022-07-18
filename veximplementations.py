@@ -19,7 +19,11 @@ class Colors(object):
         self.YELLOW = (255, 255, 0)
 
 def wait(amount: float, units: str):
-    _time.sleep(amount)
+    if units == 'msec':
+        _time.sleep(amount / 1000)
+    elif units == 'sec':
+        _time.sleep(amount)
+
 
 def Thread(target: callable):
     _threading.Thread(target=target).start()
