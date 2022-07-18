@@ -21,7 +21,7 @@ class Colors(object):
 def wait(amount: float, units: str):
     if units == 'msec':
         _time.sleep(amount / 1000)
-    elif units == 'sec':
+    elif units == 'seconds':
         _time.sleep(amount)
 
 
