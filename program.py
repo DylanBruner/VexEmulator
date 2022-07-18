@@ -8,8 +8,22 @@ class ProgramFile(object):
         self.name = self.fileName.split('.v5python')[0]
         if '/' in self.name: self.name = self.name.split('/')[-1]
 
+        self.container = None
+
         with open(self.fileName, 'r') as f: self.fileData = json.load(f)
+
+        self.deviceMappings = {
+            'Controller': vexcontroller.Controller,
+            'Motor': virtualmotor.Motor,
+            'Drivetrain': virtualdrivetrain.Drivetrain,
+            'Gyro': virtualgyro.Gyro
+        }
     
+    def reloadContainerCode(self):
+        with open(self.fileName, 'r') as f: self.fileData = json.load(f)
+        if self.container is not None:
+            self.container.code = self.patchTextCode()
+
     def getTextCode(self) -> str:
         """
         Returns the text code of the program.
@@ -50,29 +64,21 @@ class ProgramFile(object):
         NewContainer.merge_globals(veximplementations.new_globals)
         NewContainer.merge_globals(vexfunctions.new_globals)
 
+
+
         for device in self.fileData['rconfig']:
             if device['deviceType'] == 'Controller':
                 controllerCore = vexcontroller.Controller()
                 controllerServer.set_controller(controllerCore)
                 NewContainer.set_global(device['name'], controllerCore)
                 print(f'[VexEmulator(Loader)] Found controller {device["name"]}')
-            elif device['deviceType'] == 'Motor':
-                brainCore.usedPorts.append(device['port'][0])
-                motorName = device['name']
-                NewContainer.set_global(motorName, virtualmotor.Motor())
-                print(f'[VexEmulator(Loader)] Found motor {motorName}')
-            elif device['deviceType'] == 'Drivetrain':
-                brainCore.usedPorts.extend(device['port'])
-                NewContainer.set_global(device['name'], virtualdrivetrain.Drivetrain())
-                print(f'[VexEmulator(Loader)] Found drivetrain {device["name"]}')
-            elif device['deviceType'] == 'Gyro':
-                brainCore.usedPorts.append(device['port'][0])
-                NewContainer.set_global(device['name'], virtualgyro.Gyro())
-                print(f'[VexEmulator(Loader)] Found gyro {device["name"]}')
-
+            elif device['deviceType'] in self.deviceMappings:
+                print(f'[VexEmulator(Loader)] Found {device["deviceType"]} {device["name"]}')
+                NewContainer.set_global(device['name'], self.deviceMappings[device['deviceType']]())
             else:
-                print(f'[VexEmulator(Loader)] Unknown device type {device["deviceType"]}')
+                print(f'[VexEmulator(Loader)] Unknown device type {device["deviceType"]} {device["name"]}')
 
         brainCore.BrainScreen.startTime = time.time()
 
+        self.container = NewContainer
         return NewContainer

@@ -141,8 +141,9 @@ class Brain(object):
         self.selectionStop   = None
         self.canMakeSelection = False
 
-        self.onHomeScreen   = True
-        self.onDeviceScreen = False
+        self.onHomeScreen    = True
+        self.onDeviceScreen  = False
+        self.onProgramScreen = False
 
         self.powerButtonRect = pygame.Rect((582, 217), (60, 60))
         self.topBar = pygame.Rect((10, 0), (648, 60))
@@ -153,50 +154,36 @@ class Brain(object):
 
         self.DeviceInfoButton = pygame.Rect((129, 43), (100, 100))
 
+        self.buttonCooldown   = 180
 
-    def tickmainloop(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+    def runHomeScreen(self):
+        self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))#Draw the home screen
 
-        if CheckCollision(self.powerButtonRect):
-            pygame.quit(); quit()
-        elif CheckCollision(self.topBar):
-            #Allow the window to be dragged
-            win32gui.SetWindowPos(self.hwnd, win32con.HWND_NOTOPMOST, win32api.GetCursorPos()[0], win32api.GetCursorPos()[1], 0, 0, win32con.SWP_NOSIZE)
+        if self.DeviceInfoButton.collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
+            self.onHomeScreen   = False
+            self.onDeviceScreen = True
 
-        self.window.fill((255, 0, 128))
+        #Draw the program selector buttons
+        for location, program in zip(self.ProgramLocations, self.ProgramsLoaded):
+            self.BrainScreen.frame.blit(self.BrainProgramImage, location)
+            #Draw program.name under the logo
+            if len(program.name) > 10: text = self.font.render(f'{program.name[:10]}...', True, (255, 255, 255))
+            else: text = self.font.render(program.name, True, (255, 255, 255))
 
-        self.window.blit(self.BrainFrameImage, (0, 0))
-        if self.onHomeScreen:
-            self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))#Draw the home screen
+            self.BrainScreen.frame.blit(text, (location[0], location[1]+self.BrainProgramImage.get_height()+5))
 
-            if self.DeviceInfoButton.collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
-                self.onHomeScreen   = False
-                self.onDeviceScreen = True
+            if pygame.Rect(location[0], location[1], self.ProgramButtonSize[0], self.ProgramButtonSize[1]).collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
+                self.onHomeScreen = False
+                self.BrainScreen._drawProgramBar = True
+                self.BrainScreen.clear_screen()
+                self.onProgramScreen = True
+                self.CodeEnviorment  = program.loadContainer(self, self.controllerServer)
+                self.CodeEnviorment.threadedExecute()
 
-            #Draw the program selector buttons
-            for location, program in zip(self.ProgramLocations, self.ProgramsLoaded):
-                self.BrainScreen.frame.blit(self.BrainProgramImage, location)
-                #Draw program.name under the logo
-                if len(program.name) > 10: text = self.font.render(f'{program.name[:10]}...', True, (255, 255, 255))
-                else: text = self.font.render(program.name, True, (255, 255, 255))
-
-                self.BrainScreen.frame.blit(text, (location[0], location[1]+self.BrainProgramImage.get_height()+5))
-
-                if pygame.Rect(location[0], location[1], self.ProgramButtonSize[0], self.ProgramButtonSize[1]).collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
-                    print(f"{program.name} selected")
-                    self.onHomeScreen = False
-                    self.BrainScreen._drawProgramBar = True
-                    self.BrainScreen.clear_screen()
-                    self.CodeEnviorment = program.loadContainer(self, self.controllerServer).threadedExecute()
-        
-        elif self.onDeviceScreen:
-            self.BrainScreen.frame.blit(self.BrainDeviceScreen, (0, 0))
-        
-        #Draw a selection box if the mouse is pressed
-        if self.canMakeSelection:
+    def runDeviceScreen(self):
+        self.BrainScreen.frame.blit(self.BrainDeviceScreen, (0, 0))
+    
+    def selectionTick(self):
             if pygame.mouse.get_pressed()[0] and not self.makingSelection:
                 self.makingSelection = True
                 self.selectionStart = self.BrainScreen._getRelativeMouseLocation()
@@ -210,6 +197,39 @@ class Brain(object):
             elif self.makingSelection:
                 #Draw a box from self.selectionStart to self.BrainScreen._getRelativeMouseLocation()
                 self.BrainScreen.frame.fill((0, 0, 0), pygame.Rect(self.selectionStart[0], self.selectionStart[1], self.BrainScreen._getRelativeMouseLocation()[0] - self.selectionStart[0], self.BrainScreen._getRelativeMouseLocation()[1] - self.selectionStart[1]))
+
+    def teardownProgram(self):
+        self.CodeEnviorment.stop()
+        self.BrainScreen.clear_screen()
+
+    def tickmainloop(self):
+        self.buttonCooldown -= 1
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        if CheckCollision(self.powerButtonRect) and self.buttonCooldown <= 0:
+            self.buttonCooldown = 180
+            if self.onHomeScreen: pygame.quit(); quit()
+            elif self.onDeviceScreen: self.onHomeScreen  = True; self.onDeviceScreen   = False
+            elif self.onProgramScreen: 
+                self.onHomeScreen = True; self.onProgramScreen = False; self.BrainScreen._drawProgramBar = False
+                print('[VexEmulator(Brain)] Attempting to teardown container...')
+                self.teardownProgram()
+                print('[VexEmulator(Brain)] Container teardown complete!')
+        elif CheckCollision(self.topBar):
+            #Allow the window to be dragged
+            win32gui.SetWindowPos(self.hwnd, win32con.HWND_NOTOPMOST, win32api.GetCursorPos()[0], win32api.GetCursorPos()[1], 0, 0, win32con.SWP_NOSIZE)
+
+        self.window.fill((255, 0, 128))
+
+        self.window.blit(self.BrainFrameImage, (0, 0))
+        if self.onHomeScreen: self.runHomeScreen()
+        elif self.onDeviceScreen: self.runDeviceScreen()
+        
+        #Draw a selection box if the mouse is pressed
+        if self.canMakeSelection: self.selectionTick()
                 
         self.BrainScreen._draw(self.window)
         pygame.display.update()
