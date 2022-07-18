@@ -3,11 +3,11 @@ import win32api, win32con, win32gui, threading
 
 pygame.init()
 
-def RemoveColorRange(image: pygame.Surface, startRange: int, stopRange: int):
+def RemoveColorRange(image: pygame.Surface, startRange: int, stopRange: int, keyColor=(255, 0, 128)):
     for x in range(image.get_width()):
         for y in range(image.get_height()):
             if image.get_at((x, y))[0] >= startRange and image.get_at((x, y))[1] >= startRange and image.get_at((x, y))[2] >= startRange and image.get_at((x, y))[0] <= stopRange and image.get_at((x, y))[1] <= stopRange and image.get_at((x, y))[2] <= stopRange:
-                image.set_at((x, y), (255, 0, 128))
+                image.set_at((x, y), keyColor)
     return image
 
 def CheckCollision(rect: pygame.Rect):
@@ -42,6 +42,9 @@ class BrainScreen(object):
 
         self._clickEventCallbacks   = []
         self.font = pygame.font.SysFont("monospace", 20)
+    
+    def _getRelativeMouseLocation(self) -> tuple:
+        return (pygame.mouse.get_pos()[0] - 69, pygame.mouse.get_pos()[1] - 110)
 
     def set_pen_color(self, color: tuple): self.penColor = color
     def draw_pixel(self, x, y): self.frame.set_at((x, y + self.yOffsetPixels), self.penColor)
@@ -108,6 +111,15 @@ class Brain(object):
         self.BrainHomeImage  = RemoveColorRange(self.BrainHomeImage, 254, 255)#Remove the little white vert line on the far right
         self.BrainHomeImage  = pygame.transform.scale(self.BrainHomeImage, (self.BrainScreenSize[0] + 1, self.BrainScreenSize[1]))#Cover the white vert line thats now gone
 
+        self.BrainProgramImage = pygame.image.load("data/images/programlogo.png")
+        self.BrainProgramImage = self.BrainProgramImage.convert_alpha()
+        self.BrainProgramImage = RemoveColorRange(self.BrainProgramImage, 250, 255)
+        #Scale it to be 40%
+        self.BrainProgramImage = pygame.transform.scale(self.BrainProgramImage, (int(self.BrainProgramImage.get_width() * 0.30), int(self.BrainProgramImage.get_height() * 0.30)))
+
+        self.ProgramButtonSize = self.BrainProgramImage.get_size()
+        self.ProgramLocations  = [(25, 170), (150, 170), (265, 170)]
+        self.ProgramsLoaded    = []
 
         self.TransparentColor = (255, 0, 128)
 
@@ -129,6 +141,11 @@ class Brain(object):
         self.powerButtonRect = pygame.Rect((582, 217), (60, 60))
         self.topBar = pygame.Rect((10, 0), (648, 60))
 
+        self.font = pygame.font.SysFont("monospace", 12)
+
+        self.controllerServer = None
+
+
     def tickmainloop(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -145,8 +162,24 @@ class Brain(object):
 
         self.window.blit(self.BrainFrameImage, (0, 0))
         if not self.isInProgram:
-            self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))
-        
+            self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))#Draw the home screen
+
+            #Draw the program selector buttons
+            for location, program in zip(self.ProgramLocations, self.ProgramsLoaded):
+                self.BrainScreen.frame.blit(self.BrainProgramImage, location)
+                #Draw program.name under the logo
+                if len(program.name) > 10: text = self.font.render(f'{program.name[:10]}...', True, (255, 255, 255))
+                else: text = self.font.render(program.name, True, (255, 255, 255))
+
+                self.BrainScreen.frame.blit(text, (location[0], location[1]+self.BrainProgramImage.get_height()+5))
+
+                if pygame.Rect(location[0], location[1], self.ProgramButtonSize[0], self.ProgramButtonSize[1]).collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
+                    print(f"{program.name} selected")
+                    self.isInProgram = True
+                    self.BrainScreen._drawProgramBar = True
+                    self.BrainScreen.clear_screen()
+                    self.CodeEnviorment = program.loadContainer(self, self.controllerServer).threadedExecute()
+                
         self.BrainScreen._draw(self.window)
         pygame.display.update()
 

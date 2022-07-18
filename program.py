@@ -5,6 +5,9 @@ class ProgramFile(object):
     def __init__(self, filename: str):
         self.fileName = filename
 
+        self.name = self.fileName.split('.v5python')[0]
+        if '/' in self.name: self.name = self.name.split('/')[-1]
+
         with open(self.fileName, 'r') as f: self.fileData = json.load(f)
     
     def getTextCode(self) -> str:

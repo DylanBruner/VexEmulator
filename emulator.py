@@ -1,10 +1,13 @@
-import program, vexbrain, vexcontroller
+import program, vexbrain, vexcontroller, os
 
 print("[VexEmulator(Loader)] Booting emulator")
 
 controllerServer = vexcontroller.ControllerServer('localhost', 8080)
 brain            = vexbrain.Brain()
+brain.controllerServer = controllerServer
 
+for programFile in os.listdir('data/emulatedstorage/Internal/programs'):
+    brain.ProgramsLoaded.append(program.ProgramFile(f'data/emulatedstorage/Internal/programs/{programFile}'))
 
 #Fix text drawing, (kinda done)
 #load devices cleaner,
