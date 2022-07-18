@@ -117,6 +117,10 @@ class Brain(object):
         #Scale it to be 40%
         self.BrainProgramImage = pygame.transform.scale(self.BrainProgramImage, (int(self.BrainProgramImage.get_width() * 0.30), int(self.BrainProgramImage.get_height() * 0.30)))
 
+        self.BrainDeviceScreen = pygame.image.load('data/images/deviceinfoscreen.png')
+        self.BrainDeviceScreen = pygame.transform.scale(self.BrainDeviceScreen, (int(self.BrainDeviceScreen.get_width() * 1.62), 
+                                                                                 int(self.BrainDeviceScreen.get_height() * 1.6)))
+
         self.ProgramButtonSize = self.BrainProgramImage.get_size()
         self.ProgramLocations  = [(25, 170), (150, 170), (265, 170)]
         self.ProgramsLoaded    = []
@@ -135,8 +139,10 @@ class Brain(object):
         self.makingSelection = False
         self.selectionStart  = None
         self.selectionStop   = None
+        self.canMakeSelection = False
 
-        self.isInProgram = False
+        self.onHomeScreen   = True
+        self.onDeviceScreen = False
 
         self.powerButtonRect = pygame.Rect((582, 217), (60, 60))
         self.topBar = pygame.Rect((10, 0), (648, 60))
@@ -144,6 +150,8 @@ class Brain(object):
         self.font = pygame.font.SysFont("monospace", 12)
 
         self.controllerServer = None
+
+        self.DeviceInfoButton = pygame.Rect((129, 43), (100, 100))
 
 
     def tickmainloop(self):
@@ -161,8 +169,12 @@ class Brain(object):
         self.window.fill((255, 0, 128))
 
         self.window.blit(self.BrainFrameImage, (0, 0))
-        if not self.isInProgram:
+        if self.onHomeScreen:
             self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))#Draw the home screen
+
+            if self.DeviceInfoButton.collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
+                self.onHomeScreen   = False
+                self.onDeviceScreen = True
 
             #Draw the program selector buttons
             for location, program in zip(self.ProgramLocations, self.ProgramsLoaded):
@@ -175,10 +187,29 @@ class Brain(object):
 
                 if pygame.Rect(location[0], location[1], self.ProgramButtonSize[0], self.ProgramButtonSize[1]).collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
                     print(f"{program.name} selected")
-                    self.isInProgram = True
+                    self.onHomeScreen = False
                     self.BrainScreen._drawProgramBar = True
                     self.BrainScreen.clear_screen()
                     self.CodeEnviorment = program.loadContainer(self, self.controllerServer).threadedExecute()
+        
+        elif self.onDeviceScreen:
+            self.BrainScreen.frame.blit(self.BrainDeviceScreen, (0, 0))
+        
+        #Draw a selection box if the mouse is pressed
+        if self.canMakeSelection:
+            if pygame.mouse.get_pressed()[0] and not self.makingSelection:
+                self.makingSelection = True
+                self.selectionStart = self.BrainScreen._getRelativeMouseLocation()
+            elif self.makingSelection and not pygame.mouse.get_pressed()[0]:
+                self.makingSelection = False
+                self.selectionStop = self.BrainScreen._getRelativeMouseLocation()
+                self.BrainScreen.clear_screen()
+                #Make a rect out of self.selectionStart and self.selectionStop
+                selectionRect = pygame.Rect(self.selectionStart, self.selectionStop)
+                print(f"Selection start: {self.selectionStart}, {selectionRect.width}x{selectionRect.height}")
+            elif self.makingSelection:
+                #Draw a box from self.selectionStart to self.BrainScreen._getRelativeMouseLocation()
+                self.BrainScreen.frame.fill((0, 0, 0), pygame.Rect(self.selectionStart[0], self.selectionStart[1], self.BrainScreen._getRelativeMouseLocation()[0] - self.selectionStart[0], self.BrainScreen._getRelativeMouseLocation()[1] - self.selectionStart[1]))
                 
         self.BrainScreen._draw(self.window)
         pygame.display.update()
