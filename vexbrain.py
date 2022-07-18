@@ -43,8 +43,8 @@ class BrainScreen(object):
 
     def set_pen_color(self, color: tuple): self.penColor = color
     def draw_pixel(self, x, y): self.frame.set_at((x, y + self.yOffsetPixels), self.penColor)
-    def clear_row(self, row): self.frame.fill((0, 0, 0), (0, row * self.size[1] / self.maxRows, self.size[0], self.size[1] / self.maxRows))
-    def clear_screen(self): self.frame.fill((0, 0, 0))
+    def clear_row(self, row): self.frame.fill((0, 0, 0), (0, row * self.size[1] / self.maxRows, (self.size[0], self.size[1] / self.maxRows) + self.yOffsetPixels))
+    def clear_screen(self): self.frame.fill((0, 0, 0)); self.cCol = 0; self.cRow = 0
     def column(self): return self.col
     def row(self): return self.cRow
     def draw_circle(self, x, y, radius): pygame.draw.circle(self.frame, self.fillColor, (x, y + self.yOffsetPixels), radius, self.penWidth)
@@ -53,7 +53,7 @@ class BrainScreen(object):
         pygame.draw.rect(self.frame, self.fillColor, (x, y + self.yOffsetPixels, width, height))
         pygame.draw.rect(self.frame, self.penColor, (x, y + self.yOffsetPixels, width, height), width = self.penWidth)
 
-    def next_row(self): self.cRow += 1
+    def next_row(self): self.cRow += 1; self.cCol = 0
     def pressed(self, callback: callable): self._clickEventCallbacks.append(callback)
     def pressing(self) -> bool: return pygame.mouse.get_pressed()[0] and self.frame.get_rect().collidepoint(pygame.mouse.get_pos())
     def print(self, *args):
@@ -61,7 +61,7 @@ class BrainScreen(object):
         for arg in args:
             text += str(arg) + " "            
         text = self.font.render(text, True, (255, 255, 255))
-        self.frame.blit(text, (self.cCol * self.size[0] / self.maxCols, self.cRow * self.size[1] / self.maxRows))
+        self.frame.blit(text, ((self.cCol * self.size[0] / self.maxCols), (self.cRow * self.size[1] / self.maxRows)+self.yOffsetPixels))
         self.cCol += 1
         if self.cCol >= self.maxCols:
             self.cCol = 0

@@ -1,5 +1,9 @@
 import time as _time
 import threading as _threading
+import os as _os
+
+def fileOpen(path: str, mode: str):
+    return open(_os.path.join('data/emulatedstorage/SDCard/',path), mode)
 
 class Colors(object):
     def __init__(self):
@@ -23,5 +27,6 @@ def Thread(target: callable):
 new_globals = {
     'wait': wait,
     'Thread': Thread,
-    'Color': Colors()
+    'Color': Colors(),
+    'open': fileOpen,
 }

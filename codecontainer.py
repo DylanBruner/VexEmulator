@@ -1,3 +1,5 @@
+import threading
+
 class Container(object):
     def __init__(self, code: str):
         self.code = code
@@ -12,3 +14,6 @@ class Container(object):
     
     def execute(self):
         exec(self.code, self._globals)
+    
+    def threadedExecute(self):
+        threading.Thread(target=self.execute).start()
