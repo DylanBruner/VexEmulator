@@ -139,11 +139,21 @@ class Brain(object):
         self.BrainProgramImage = self.BrainProgramImage.convert_alpha()
         self.BrainProgramImage = RemoveColorRange(self.BrainProgramImage, 250, 255)
         #Scale it to be 40%
+        self.ProgramIconSmall = pygame.image.load('data/images/programlogo.png')
+        self.ProgramIconSmall = self.ProgramIconSmall.convert_alpha()
+        self.ProgramIconSmall = RemoveColorRange(self.ProgramIconSmall, 250, 255)
+        self.ProgramIconSmall = pygame.transform.scale(self.ProgramIconSmall, (51, 51))
+
         self.BrainProgramImage = pygame.transform.scale(self.BrainProgramImage, (int(self.BrainProgramImage.get_width() * 0.30), int(self.BrainProgramImage.get_height() * 0.30)))
 
         self.BrainDeviceScreen = pygame.image.load('data/images/deviceinfoscreen.png')
         self.BrainDeviceScreen = pygame.transform.scale(self.BrainDeviceScreen, (int(self.BrainDeviceScreen.get_width() * 1.62), 
                                                                                  int(self.BrainDeviceScreen.get_height() * 1.6)))
+
+        self.BrainUserFolderScreen = pygame.image.load('data/images/userfolder.png')
+        self.BrainUserFolderScreen = pygame.transform.scale(self.BrainUserFolderScreen, (int(self.BrainUserFolderScreen.get_width() * 1.62), 
+                                                                                         int(self.BrainUserFolderScreen.get_height() * 1.6)))
+        self.EmptyProgramIcon = pygame.image.load('data/images/programslot.png')
 
         self.ProgramButtonSize = self.BrainProgramImage.get_size()
         self.ProgramLocations  = [(25, 170), (150, 170), (265, 170)]
@@ -160,14 +170,15 @@ class Brain(object):
                        win32gui.GetWindowLong(self.hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED)
         win32gui.SetLayeredWindowAttributes(self.hwnd, win32api.RGB(255, 0, 128), 0, win32con.LWA_COLORKEY)
 
-        self.makingSelection = False
-        self.selectionStart  = None
-        self.selectionStop   = None
+        self.makingSelection  = False
+        self.selectionStart   = None
+        self.selectionStop    = None
         self.canMakeSelection = False
 
-        self.onHomeScreen    = True
-        self.onDeviceScreen  = False
-        self.onProgramScreen = False
+        self.onHomeScreen          = True
+        self.onDeviceScreen        = False
+        self.onProgramScreen       = False
+        self.onProgramFolderScreen = False
 
         self.powerButtonRect = pygame.Rect((582, 217), (60, 60))
         self.topBar = pygame.Rect((10, 0), (648, 60))
@@ -176,7 +187,8 @@ class Brain(object):
 
         self.controllerServer = None
 
-        self.DeviceInfoButton = pygame.Rect((129, 43), (100, 100))
+        self.DeviceInfoButton    = pygame.Rect((129, 43),  (100, 100))
+        self.UserProgramsButton  = pygame.Rect((375, 167), (100, 100))
 
         self.buttonCooldown   = 180
 
@@ -186,6 +198,9 @@ class Brain(object):
         if self.DeviceInfoButton.collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
             self.onHomeScreen   = False
             self.onDeviceScreen = True
+        elif self.UserProgramsButton.collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
+            self.onHomeScreen          = False
+            self.onProgramFolderScreen = True
 
         #Draw the program selector buttons
         for location, program in zip(self.ProgramLocations, self.ProgramsLoaded):
@@ -206,6 +221,46 @@ class Brain(object):
 
     def runDeviceScreen(self):
         self.BrainScreen.frame.blit(self.BrainDeviceScreen, (0, 0))
+    
+    def runUserProgramScreen(self):
+        self.BrainScreen.frame.blit(self.BrainUserFolderScreen, (0, 0))
+        #Create the empty program buttons
+        ButtonsPerRow = self.BrainScreen.size[0] // (self.EmptyProgramIcon.get_width() + 35)
+        AmountOFRows  = 3
+
+        for row in range(AmountOFRows):
+            for button in range(ButtonsPerRow):
+                self.BrainScreen.frame.blit(self.EmptyProgramIcon, ((button * (self.EmptyProgramIcon.get_width() + 35)) + 20, 
+                                                                    (row * (self.EmptyProgramIcon.get_height() + 35)) + self.BrainScreen.yOffsetPixels + 20))
+
+        CurrentButton = 0
+        CurrentRow    = 0
+
+        for program in self.ProgramsLoaded:
+            location = ((CurrentButton * (self.EmptyProgramIcon.get_width() + 35)) + 20, 
+                        (CurrentRow * (self.EmptyProgramIcon.get_height() + 35)) + self.BrainScreen.yOffsetPixels + 20)
+            #Draw a self.ProgramImage under the button
+            self.BrainScreen.frame.blit(self.ProgramIconSmall, location)
+            #Draw program.name under the logo
+            if len(program.name) > 10: text = self.font.render(f'{program.name[:10]}...', True, (255, 255, 255))
+            else: text = self.font.render(program.name, True, (255, 255, 255))
+            self.BrainScreen.frame.blit(text, (location[0], location[1]+55))
+
+            if CurrentButton > ButtonsPerRow - 1:
+                CurrentRow += 1
+                CurrentButton = 0
+            else:
+                CurrentButton += 1
+            Rect = pygame.Rect(location[0], location[1], 51, 51)
+            pygame.draw.rect(self.BrainScreen.frame, (255, 255, 255), Rect, 1)
+            if Rect.collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
+                self.onProgramFolderScreen       = False
+                self.BrainScreen._drawProgramBar = True
+                self.BrainScreen.clear_screen()
+                self.onProgramScreen = True
+                self.CodeEnviorment  = program.loadContainer(self, self.controllerServer)
+                self.CodeEnviorment.threadedExecute()
+        
     
     def selectionTick(self):
             if pygame.mouse.get_pressed()[0] and not self.makingSelection:
@@ -236,7 +291,8 @@ class Brain(object):
         if CheckCollision(self.powerButtonRect) and self.buttonCooldown <= 0:
             self.buttonCooldown = 180
             if self.onHomeScreen: pygame.quit(); quit()
-            elif self.onDeviceScreen: self.onHomeScreen  = True; self.onDeviceScreen   = False
+            elif self.onDeviceScreen: self.onHomeScreen        = True; self.onDeviceScreen        = False
+            elif self.onProgramFolderScreen: self.onHomeScreen = True; self.onProgramFolderScreen = False
             elif self.onProgramScreen: 
                 self.onHomeScreen = True; self.onProgramScreen = False; self.BrainScreen._drawProgramBar = False
                 print('[VexEmulator(Brain)] Attempting to teardown container...')
@@ -251,6 +307,7 @@ class Brain(object):
         self.window.blit(self.BrainFrameImage, (0, 0))
         if self.onHomeScreen: self.runHomeScreen()
         elif self.onDeviceScreen: self.runDeviceScreen()
+        elif self.onProgramFolderScreen: self.runUserProgramScreen()
         
         #Draw a selection box if the mouse is pressed
         if self.canMakeSelection: self.selectionTick()
