@@ -11,4 +11,7 @@ new_globals = {
     'AMP': 'amp',
     'VOLT': 'volt',
     'DEGREES': 'degrees',
+    'MM': 'mm',
+    'RIGHT': 'right',
+    'LEFT': 'left',
 }

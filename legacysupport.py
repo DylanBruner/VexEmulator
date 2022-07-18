@@ -1,0 +1,1 @@
+brain.clear_line = brain.clear_row

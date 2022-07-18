@@ -16,8 +16,8 @@ class Motor(object):
     def set_timeout(self, value, units): pass
     def set_velocity(self, velocity, units): pass
     def spin(self, direction): pass
-    def spin_for(self, direction, angle, units, wait): pass
-    def spin_to_position(self, angle, units, wait): pass
+    def spin_for(self, direction, angle, units, wait=False): pass
+    def spin_to_position(self, angle, units, wait=False): pass
     def stop(self): pass
     def temperature(self, units) -> float: return 0.0
     def torque(self, units) -> float: return 0.0

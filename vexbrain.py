@@ -252,7 +252,6 @@ class Brain(object):
             else:
                 CurrentButton += 1
             Rect = pygame.Rect(location[0], location[1], 51, 51)
-            pygame.draw.rect(self.BrainScreen.frame, (255, 255, 255), Rect, 1)
             if Rect.collidepoint(self.BrainScreen._getRelativeMouseLocation()) and pygame.mouse.get_pressed()[0]:
                 self.onProgramFolderScreen       = False
                 self.BrainScreen._drawProgramBar = True
@@ -280,6 +279,9 @@ class Brain(object):
     def teardownProgram(self):
         self.CodeEnviorment.stop()
         self.BrainScreen.clear_screen()
+
+        #Reset the screen
+        self.BrainScreen = BrainScreen(self.BrainScreen.size, self.BrainScreen.location)
 
     def tickmainloop(self):
         self.buttonCooldown -= 1
