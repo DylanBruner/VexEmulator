@@ -1,6 +1,6 @@
 import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, time, random, string
 from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
-from vexdevices import virtualcontroller
+from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup
 
 def getRandomString(length=8) -> str: return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
@@ -24,7 +24,8 @@ class ProgramFile(object):
             'Distance': virtualdistance.Distance,
             'Magnet': virtualmagnet.Magnet,
             'Rotation': virtualrotation.Rotation,
-            'Optical': virtualoptical.Optical
+            'Optical': virtualoptical.Optical,
+            'Inertial': virtualinertial.Inertial
         }
     
     def reloadContainerCode(self):
@@ -56,6 +57,7 @@ class ProgramFile(object):
         return linker + baseCode
     
     def loadContainer(self, brainCore: vexbrain.Brain) -> codecontainer.Container:
+        # sourcery skip: extract-duplicate-method
         """
         Loads the program into a container.
         """
@@ -83,6 +85,17 @@ class ProgramFile(object):
                 deviceRef._name = device['name']
                 NewContainer.set_global(device['name'], deviceRef)
                 brainCore.virtualDevices.append(deviceRef)
+            elif device['deviceType'] == 'MotorGroup':
+                print(f'[VexEmulator(Loader)] Found {device["deviceType"]} {device["name"]}')
+                Motor1, Motor2  = virtualmotor.Motor(), virtualmotor.Motor()
+                MotorGroup      = virtualmotorgroup.MotorGroup(Motor1, Motor2)
+                Motor1._id      = getRandomString(16); Motor1._type     = 'Motor'; Motor1._name          = f"{device['name']}_motor_a"
+                Motor2._id      = getRandomString(16); Motor2._type     = 'Motor'; Motor2._name          = f"{device['name']}_motor_b"
+                MotorGroup._id  = getRandomString(16); MotorGroup._type = 'MotorGroup'; MotorGroup._name = device['name']
+
+                NewContainer.set_global(device['name'], MotorGroup); brainCore.virtualDevices.append(MotorGroup)
+                NewContainer.set_global(f"{device['name']}_motor_a", Motor1); brainCore.virtualDevices.append(Motor1)
+                NewContainer.set_global(f"{device['name']}_motor_b", Motor2); brainCore.virtualDevices.append(Motor2)
             else:
                 print(f'[VexEmulator(Loader)] Unknown device type {device["deviceType"]} {device["name"]}')
 

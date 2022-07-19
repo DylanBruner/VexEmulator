@@ -14,6 +14,8 @@ Brain
    - Motor
    - Optical Sensor (not tested)
    - Rotation Sensor
+   - Inertial Sensor
+   - Motor Group
 
  - What happens when a program is executed/selected/clicked
   1. The program is loaded into a "CodeContainer"

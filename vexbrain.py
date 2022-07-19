@@ -217,6 +217,7 @@ class Brain(object):
                 self.BrainScreen._drawProgramBar = True
                 self.BrainScreen.clear_screen()
                 self.onProgramScreen = True
+                program.reloadContainerCode()
                 self.CodeEnviorment  = program.loadContainer(self)
                 self.CodeEnviorment.threadedExecute()
 
@@ -314,6 +315,12 @@ class Brain(object):
         
         #Draw a selection box if the mouse is pressed
         if self.canMakeSelection: self.selectionTick()
+
+        if self.onProgramScreen and self.CodeEnviorment is not None:
+            if self.CodeEnviorment.executionFailed:
+                self.onProgramScreen = False; self.onHomeScreen = True; self.BrainScreen._drawProgramBar = False
+                self.teardownProgram()
+                print('[VexEmulator(Brain)] Container teardown complete!')
         
         self.BrainScreen._draw(self.window)
         pygame.display.update()
