@@ -1,7 +1,5 @@
-import json
-import pygame, time, math, pygamepopup
+import pygame, time, math, pygamepopup, json
 import win32api, win32con, win32gui, threading
-
 
 TransparentColor = (255, 0, 128)
 
@@ -349,7 +347,7 @@ class Brain(object):
                         self.popups.append(pygamepopup.Popup(self, ['Code failed!','Enable legacy support?','',str(self.CodeEnviorment.executionFailureReason)], 
                                                                    ['Yes','No',"Don't ask again"], self.legacyModePrompt))
                     else:
-                        self.popups.append(pygamepopup.Popup(self, ['Code failed!',f'Legacy Mode: {self.legacyMode}','',str(self.CodeEnviorment.executionFailureReason)], ['ok'], lambda x: None))
+                        self.popups.append(pygamepopup.SimpleAlert(self, ['Code failed!',f'Legacy Mode: {self.legacyMode}','',str(self.CodeEnviorment.executionFailureReason)]))
 
         for popup in self.popups: popup.tick()
 

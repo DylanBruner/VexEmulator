@@ -19,6 +19,7 @@ function generateDeviceAttributes(elementId, deviceId){
             }
         }
 
+        data     = data['attributes']
         dataKeys = Object.keys(data)
         for (let i = 0; i < dataKeys.length; i++) {
             attributeData = data[dataKeys[i]];
@@ -30,6 +31,8 @@ function generateDeviceAttributes(elementId, deviceId){
             {TargetSpan.innerHTML += `<attribute id="${dataKeys[i]}" vartype="float"><a>${dataKeys[i]}</a><input type="number" value="${attributeData['value']}"></input></attribute>`}
             else if (attributeData['type'] == 'string')
             {TargetSpan.innerHTML += `<attribute id="${dataKeys[i]}" vartype="string"><a>${dataKeys[i]}</a><input type="text" value="${attributeData['value']}"></input></attribute>`}
+            else if (attributeData['type'] == 'callback')
+            {TargetSpan.innerHTML += `<attribute id="${dataKeys[i]}" vartype="string"><a>${dataKeys[i]}</a><button onclick="triggerCallback('${deviceId}', '${dataKeys[i]}')">Trigger</button></attribute>`}
         }
 
         TargetSpan.innerHTML += `<button onclick="updateDeviceAttributes('${elementId}', '${deviceId}')">Update</button>`
@@ -47,6 +50,8 @@ function loadDevicesFromServer(){
         }
     });
 }
+
+function triggerCallback(deviceId, attributeName){fetch(`/api/device/callattribute/${deviceId}/${attributeName}`)}
 
 function updateDeviceAttributes(elementId, deviceId){
     ChildElements = document.getElementById(elementId).children

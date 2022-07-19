@@ -1,5 +1,9 @@
 import pygame, time
 
+def SimpleAlert(brain, text: list or str):
+    if type(text) == list: return Popup(brain, text, ['ok'], lambda x: None)
+    else: return Popup(brain, [text], ['ok'], lambda x: None)
+
 class Popup(object):
     def __init__(self, brain, text: list, options: list, callback: callable):
         self.brain       = brain

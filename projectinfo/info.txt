@@ -72,6 +72,7 @@ Webserver
   - String
   - Integer
   - Float
+  - Callbacks
 
  - Planned Features
   - Make the UI look a lot nicer (pictures!!)

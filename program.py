@@ -1,4 +1,4 @@
-import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, time, random, string
+import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, time, random, string, competitionsupport
 from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
 from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup
 
@@ -67,6 +67,7 @@ class ProgramFile(object):
         if '/' in fileName: fileName = fileName.split('/')[-1]
         brainCore.BrainScreen.programName  = fileName
 
+        brainCore.virtualDevices = []
 
         NewContainer.set_global('brain', vexbrain.BrainLinker(brainCore.BrainScreen, vexbrain.Battery(), vexbrain.Timer()))
         NewContainer.set_global('print', prettyemu.prettyPrint)
@@ -74,7 +75,11 @@ class ProgramFile(object):
         NewContainer.merge_globals(veximplementations.new_globals)
         NewContainer.merge_globals(vexfunctions.new_globals)
 
-        brainCore.virtualDevices = []
+        CompetitionClass = competitionsupport.CompetitionAttributeStore(brainCore)
+        NewContainer.set_global('Competition', CompetitionClass.CompetitionUserFunc)
+        CompetitionClass._id = getRandomString(16); CompetitionClass._type = 'callback'; CompetitionClass._name = 'Competition-Controller'
+        brainCore.virtualDevices.append(CompetitionClass)
+
         for device in self.fileData['rconfig']:
             if device['deviceType'] in self.deviceMappings:
                 print(f'[VexEmulator(Loader)] Found {device["deviceType"]} {device["name"]}')

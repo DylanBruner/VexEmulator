@@ -15,6 +15,8 @@ class VirtualInterface(object):
         self.server.routes.append(('/api/devices', self.listDevices))
         self.server.routes.append(('/api/device/attributes/<deviceId>', self.listDeviceAttributes))
         self.server.routes.append(('/api/device/setattribute/<deviceId>/<attribute>/<value>', self.setDeviceAttribute))
+        self.server.routes.append(('/api/device/callattribute/<deviceId>/<attribute>', self.callAttribute))
+        self.server.routes.append(('/api/interact/brain/<functionString>', self.interactBrain))
 
         threading.Thread(target=self.server.run).start()
 
@@ -25,15 +27,43 @@ class VirtualInterface(object):
     def indexCss(self) -> str:
         with open('data/static/index.css', 'r') as f: return f.read()
 
+    def interactBrain(self, functionString):
+        try:
+            threading.Thread(self.brain.__getattribute__(functionString)).start()
+        except AttributeError as e:
+            return json.dumps({'success': False, 'error': str(e)})
+        return json.dumps({'success': True})
+
     def listDevices(self) -> dict:
-        return json.dumps({'devices': [{'name': device._name, 'type': device._type, 'id': device._id} for device in self.brain.virtualDevices]})
+        devices = {'devices': []}
+        for device in self.brain.virtualDevices:
+            devices['devices'].append({
+                'name': device._name,
+                'attributes': device._type,
+                'id': device._id,
+            })
+
+        return json.dumps(devices)
     
-    def listDeviceAttributes(self, deviceId: str) -> dict:
+    def callAttribute(self, deviceId, attribute):
         for device in self.brain.virtualDevices:
             if device._id == deviceId:
-                return json.dumps(device._attributes)
+                threading.Thread(target=device._attributes[attribute]['value']).start()
+        return json.dumps({'success': True})
 
-        return json.dumps({'attributes': {}})
+    def listDeviceAttributes(self, deviceId: str) -> dict:
+        attributes = {'attributes': {}}
+        for device in self.brain.virtualDevices:
+            if device._id == deviceId:
+                for attribute in device._attributes:
+                    attributeName = attribute
+                    attribute = device._attributes[attribute]
+                    if attribute['type'] != 'callback':
+                        attributes['attributes'][attributeName] = attribute
+                    else:
+                        attributes['attributes'][attributeName] = {'type': attribute['type'], 'value': '(callback)'}
+
+        return json.dumps(attributes)
     
     def setDeviceAttribute(self, deviceId, attribute, value):
         for device in self.brain.virtualDevices:
