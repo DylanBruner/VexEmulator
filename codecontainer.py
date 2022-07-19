@@ -29,7 +29,8 @@ class Container(object):
         self.code = code
         self._globals = {}
 
-        self.executionFailed = False
+        self.executionFailed        = False
+        self.executionFailureReason = None
     
     def set_global(self, name: str, value):
         self._globals[name] = value
@@ -48,6 +49,7 @@ class Container(object):
         except Exception as e:
             print(f'[VexEmulator(Container)/Error] {e}')
             self.executionFailed = True
+            self.executionFailureReason = e
 
     def threadedExecute(self):
         self.executer = StoppableThread('Executer', self)

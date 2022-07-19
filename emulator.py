@@ -1,4 +1,4 @@
-import vexbrain, virtualdeviceserver, os, program
+import vexbrain, virtualdeviceserver, os, program, pygamepopup
 
 print("[VexEmulator(Loader)] Booting emulator")
 
@@ -13,5 +13,6 @@ for programFile in os.listdir('data/emulatedstorage/Internal/programs'):
 #Detect if the program fails and ask if they want to retry in legacy mode
 #add set_font support
 print("[VexEmulator(Loader)] Code started")
+
 while True:
     brain.tickmainloop()

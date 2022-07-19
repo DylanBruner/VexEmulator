@@ -1,6 +1,9 @@
-import pygame, time, math
+import json
+import pygame, time, math, pygamepopup
 import win32api, win32con, win32gui, threading
 
+
+TransparentColor = (255, 0, 128)
 
 pygame.init()
 
@@ -18,6 +21,8 @@ class BrainScreen(object):
     def __init__(self, size: tuple, location: tuple):
         self.size     = size
         self.location = location
+
+        self.inputFrozen = False
 
         self.frame = pygame.Surface(size)
         self.frame.fill((0, 0, 0))
@@ -48,6 +53,7 @@ class BrainScreen(object):
         self.font = pygame.font.SysFont("monospace", 20)
     
     def _getRelativeMouseLocation(self) -> tuple:
+        if self.inputFrozen: return (0, 0)
         return (pygame.mouse.get_pos()[0] - 69, pygame.mouse.get_pos()[1] - 110)
 
     def set_pen_color(self, color: tuple): self.penColor = color
@@ -61,8 +67,9 @@ class BrainScreen(object):
     def row(self): return self.cRow
     def draw_circle(self, x, y, radius): pygame.draw.circle(self.frame, self.fillColor, (x, y + self.yOffsetPixels), radius, self.penWidth)
     def draw_line(self, start_x, start_y, stop_x, stop_y): pygame.draw.line(self.frame, self.fillColor, (start_x, start_y + self.yOffsetPixels), (stop_x, stop_y + self.yOffsetPixels), self.penWidth)
-    def draw_rectangle(self, x, y, width, height): 
-        pygame.draw.rect(self.frame, self.fillColor, (x, y + self.yOffsetPixels, width, height))
+    def draw_rectangle(self, x, y, width, height, color = None):
+        if color is None: color = self.fillColor
+        pygame.draw.rect(self.frame, color, (x, y + self.yOffsetPixels, width, height))
         pygame.draw.rect(self.frame, self.penColor, (x, y + self.yOffsetPixels, width, height), width = self.penWidth)
 
     def next_row(self): self.cRow += 1; self.cCol = 0
@@ -127,6 +134,8 @@ class Brain(object):
         self.window = pygame.display.set_mode((674, 466), pygame.NOFRAME)
         self.BrainScreenSize = (480, 272)
 
+        self.overlayFrame    = pygame.Surface((674, 466), pygame.SRCALPHA)
+
         self.BrainFrameImage = pygame.image.load("data/images/brainoutline.png")
         self.BrainFrameImage = self.BrainFrameImage.convert_alpha()
         self.BrainFrameImage = RemoveColorRange(self.BrainFrameImage, 235, 255)
@@ -190,8 +199,23 @@ class Brain(object):
         self.DeviceInfoButton    = pygame.Rect((129, 43),  (100, 100))
         self.UserProgramsButton  = pygame.Rect((375, 167), (100, 100))
 
-        self.buttonCooldown   = 180
+        self.buttonCooldown   = 5000
+        self.popups = []
 
+        self.legacyMode = False
+    
+    def legacyModePrompt(self, clicked: str):
+        if clicked.lower().strip() == "yes":
+            self.legacyMode = True
+            print("[VexEmulator(Brain)] Legacy mode enabled")
+        elif clicked.lower().strip() == "no":
+            self.legacyMode = False
+            print("[VexEmulator(Brain)] Legacy mode disabled")
+        elif clicked.lower().strip() == "don't ask again":
+            with open('data/config.json') as f: data = json.load(f)
+            data['promptLegacyMode'] = False
+            with open('data/config.json', 'w') as f: json.dump(data, f)
+            print("[VexEmulator(Brain)] Legacy mode prompt disabled")
 
     def runHomeScreen(self):
         self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))#Draw the home screen
@@ -320,9 +344,18 @@ class Brain(object):
             if self.CodeEnviorment.executionFailed:
                 self.onProgramScreen = False; self.onHomeScreen = True; self.BrainScreen._drawProgramBar = False
                 self.teardownProgram()
-                print('[VexEmulator(Brain)] Container teardown complete!')
-        
+                with open('data/config.json') as f:
+                    if json.load(f)['promptLegacyMode'] and not self.legacyMode:
+                        self.popups.append(pygamepopup.Popup(self, ['Code failed!','Enable legacy support?','',str(self.CodeEnviorment.executionFailureReason)], 
+                                                                   ['Yes','No',"Don't ask again"], self.legacyModePrompt))
+                    else:
+                        self.popups.append(pygamepopup.Popup(self, ['Code failed!',f'Legacy Mode: {self.legacyMode}','',str(self.CodeEnviorment.executionFailureReason)], ['ok'], lambda x: None))
+
+        for popup in self.popups: popup.tick()
+
         self.BrainScreen._draw(self.window)
+        self.window.blit(self.overlayFrame, (0, 0))
+        
         pygame.display.update()
 
 class Timer(object):

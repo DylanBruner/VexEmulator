@@ -74,7 +74,6 @@ class ProgramFile(object):
         NewContainer.merge_globals(veximplementations.new_globals)
         NewContainer.merge_globals(vexfunctions.new_globals)
 
-
         brainCore.virtualDevices = []
         for device in self.fileData['rconfig']:
             if device['deviceType'] in self.deviceMappings:

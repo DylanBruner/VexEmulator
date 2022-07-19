@@ -43,9 +43,10 @@ Brain
 
  - Planned Todos
   - Clean up code!!
-  - If the code fails show a popup asking if the user wants to retry in legacy mode
+  [DONE] - If the code fails show a popup asking if the user wants to retry in legacy mode
   - Legacy mode
     - Add support for functions VEX changed or removed
+  - Drivetrain w Inertial support!
   - Make all devices able to be emulated
   - Maybe use physical controller on the emulated brain not sure about the practicality of this
   - Register the brain's battery as a emulated device that way the web UI can control it's attributes
@@ -61,7 +62,7 @@ Brain
 
   - Interesting Possible Features
    - Try to inject code into VEX Code that will launch the emulator when the run button is clicked without a brain connected
-    - Or possibly use a virtual serial device and pretend to be a real brain (not sure how hard this would be to do)
+     - Or possibly use a virtual serial device and pretend to be a real brain (not sure how hard this would be to do)
   
 
 Webserver
