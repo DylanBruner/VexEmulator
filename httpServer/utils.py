@@ -17,10 +17,11 @@ def DecodeRequest(data: bytes):
     resp = classes.Request()
 
     data = data.decode()
-
-    resp.method = data.split('/')[0].strip()
-    resp.url    = data.split('HTTP/')[0].split('GET ')[1].strip()
-
+    try:
+        resp.method = data.split('/')[0].strip()
+        resp.url    = data.split('HTTP/')[0].split('GET ')[1].strip()
+    except IndexError:
+        pass
     for line in data.split('\n'):
         if ":" in line:
             headerName  = line.split(":")[0].strip()
