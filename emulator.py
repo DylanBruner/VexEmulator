@@ -1,4 +1,4 @@
-import vexbrain, virtualdeviceserver, os, program, pygamepopup
+import vexbrain, virtualdeviceserver, os, program
 
 print("[VexEmulator(Loader)] Booting emulator")
 

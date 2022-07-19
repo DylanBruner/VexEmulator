@@ -50,7 +50,7 @@ Brain
   - Make all devices able to be emulated
   - Maybe use physical controller on the emulated brain not sure about the practicality of this
   - Register the brain's battery as a emulated device that way the web UI can control it's attributes
-  - Add support for the competition function
+  [DONE] - Add support for the competition function
   - Maybe fix the emulator dragging (stop it from snapping)
   - A CLI interface to start the emulator at a certain point or to start a program without interaction
   - Ability to take screenshots of the emulator easily

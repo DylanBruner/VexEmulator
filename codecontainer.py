@@ -43,6 +43,11 @@ class Container(object):
         self.executer.stop()
 
     def execute(self):
+        """
+        I know your not supposed to use exec, but i mean your already knowingly running code so it doesn't really matter
+        Warning, programs executed are fully capable of executing shell commands and interacting with the system
+        THIS IS NOT A SANDBOX/VM!!
+        """
         self.set_global('container', self)
         try:
             exec(self.code, self._globals)
