@@ -1,4 +1,4 @@
-import pygame, time, math, os
+import pygame, time, math
 import win32api, win32con, win32gui, threading
 
 
@@ -247,7 +247,7 @@ class Brain(object):
             else: text = self.font.render(program.name, True, (255, 255, 255))
             self.BrainScreen.frame.blit(text, (location[0], location[1]+55))
 
-            if CurrentButton > ButtonsPerRow - 1:
+            if CurrentButton > ButtonsPerRow - 2:
                 CurrentRow += 1
                 CurrentButton = 0
             else:
@@ -314,7 +314,7 @@ class Brain(object):
         
         #Draw a selection box if the mouse is pressed
         if self.canMakeSelection: self.selectionTick()
-                
+        
         self.BrainScreen._draw(self.window)
         pygame.display.update()
 
