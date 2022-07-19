@@ -1,0 +1,60 @@
+Brain
+ - Current Devices that can be emulated
+   - Bumper
+   - Controller
+   - Distance Sensor
+   - Drivetrain
+   - Gyroscope
+   - Electro Magnet
+   - Motor
+   - Optical Sensor (not tested)
+   - Rotation Sensor
+
+ - What happens when a program is executed/selected/clicked
+  1. The program is loaded into a "CodeContainer"
+    - A CodeContainer is a container for a program it has it's own functions, variables, globals, etc.
+  2. All of the devices are loaded into the CodeContainers globals
+                (Supported Devices that are in the .v5python config file)
+  3. The CodeContainer is executed on it's own thread
+     - It can fully access the brain's screen/timer/battery/etc.
+
+ - Has a device info screen like the real brain but it doesn't do anything at the moment
+   as the devices are not loaded until a program is executed.
+
+ - It is possible to progomaticly check wether or not the code is running on Physical or Emulated brain by checking if
+   any of the devices have the attribute ._attributes for example 
+   hasattr(device, "_attributes")
+
+ - 18 diffrent programs can be ran from the brain, 3 from the home screen and 15 from the user programs screen
+ - The User Programs Folder works as mentioned above
+ - Loads programs as .v5python
+ - Uses a "virtual" SD Card that the programs can write to as normal
+  - /data/emulatedstorage/SDCard
+ - All programs are stored in data/emulatedstorage/Internal/Programs
+ - Home button allows exiting a program and returning to the home screen where another program can be ran
+ - Emulates/Redirects functions like Thread, wait to their respective external libraries
+
+ - Planned Features
+  - If the code fails show a popup asking if the user wants to retry in legacy mode
+  - Legacy mode
+    - Add support for functions VEX changed or removed
+  - Make all devices able to be emulated
+  - Maybe use physical controller on the emulated brain not sure about the practicality of this
+  - Register the brain's battery as a emulated device that way the web UI can control it's attributes
+
+
+Webserver
+ - Allows all devices and their attributes to be modified through the browser
+ - Current supported attribute types
+  - Boolean
+  - String
+  - Integer
+  - Float
+
+ - Planned Features
+  - Make the UI look a lot nicer (pictures!!)
+  - Use sliders when possible
+  - Make device attributes collapseable
+  - Group / order devices by type
+    - Controller is at top when loaded
+  - Nicer Input themeing

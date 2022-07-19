@@ -342,13 +342,15 @@ class Timer(object):
 
 class Battery(object):
     def __init__(self):
-        self._capacity = 85
-        self._current  = 15
-        self._voltage  = 12.6 
+        self._attributes = {
+            'capacity': {'type': 'int', 'value': 85},
+            'current':  {'type': 'int', 'value': 15},
+            'voltage':  {'type': 'float', 'value': 12.6}
+        }
     
-    def capacity(self): return self._capacity
-    def current(self, units):  return self._current
-    def voltage(self, units):  return self._voltage
+    def capacity(self): return self._attributes['capacity']['value']
+    def current(self, units):  return self._attributes['current']['value']
+    def voltage(self, units):  return self._attributes['voltage']['value']
 
 class BrainLinker(object):
     def __init__(self, screen: BrainScreen, battery: Battery, timer: Timer):
