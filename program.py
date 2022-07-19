@@ -1,5 +1,8 @@
-import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, vexcontroller, time
+import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, time, random, string
 from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
+from vexdevices import virtualcontroller
+
+def getRandomString(length=8) -> str: return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
 class ProgramFile(object):
     def __init__(self, filename: str):
@@ -13,7 +16,7 @@ class ProgramFile(object):
         with open(self.fileName, 'r') as f: self.fileData = json.load(f)
 
         self.deviceMappings = {
-            'Controller': vexcontroller.Controller,
+            'Controller': virtualcontroller.Controller,
             'Motor': virtualmotor.Motor,
             'Drivetrain': virtualdrivetrain.Drivetrain,
             'Gyro': virtualgyro.Gyro,
@@ -52,7 +55,7 @@ class ProgramFile(object):
 
         return linker + baseCode
     
-    def loadContainer(self, brainCore: vexbrain.Brain, controllerServer: vexcontroller.ControllerServer) -> codecontainer.Container:
+    def loadContainer(self, brainCore: vexbrain.Brain) -> codecontainer.Container:
         """
         Loads the program into a container.
         """
@@ -70,16 +73,16 @@ class ProgramFile(object):
         NewContainer.merge_globals(vexfunctions.new_globals)
 
 
-
+        brainCore.virtualDevices = []
         for device in self.fileData['rconfig']:
-            if device['deviceType'] == 'Controller':
-                controllerCore = vexcontroller.Controller()
-                controllerServer.set_controller(controllerCore)
-                NewContainer.set_global(device['name'], controllerCore)
-                print(f'[VexEmulator(Loader)] Found controller {device["name"]}')
-            elif device['deviceType'] in self.deviceMappings:
+            if device['deviceType'] in self.deviceMappings:
                 print(f'[VexEmulator(Loader)] Found {device["deviceType"]} {device["name"]}')
-                NewContainer.set_global(device['name'], self.deviceMappings[device['deviceType']]())
+                deviceRef = self.deviceMappings[device['deviceType']]()
+                deviceRef._id   = getRandomString(16)
+                deviceRef._type = device['deviceType']
+                deviceRef._name = device['name']
+                NewContainer.set_global(device['name'], deviceRef)
+                brainCore.virtualDevices.append(deviceRef)
             else:
                 print(f'[VexEmulator(Loader)] Unknown device type {device["deviceType"]} {device["name"]}')
 

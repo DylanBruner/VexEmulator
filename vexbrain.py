@@ -1,5 +1,6 @@
-import pygame, time, math
+import pygame, time, math, os
 import win32api, win32con, win32gui, threading
+
 
 pygame.init()
 
@@ -161,7 +162,8 @@ class Brain(object):
 
         self.TransparentColor = (255, 0, 128)
 
-        self.usedPorts = []
+        self.usedPorts      = []
+        self.virtualDevices = []
 
         self.BrainScreen     = BrainScreen(self.BrainScreenSize, (68, 110))
 
@@ -185,12 +187,11 @@ class Brain(object):
 
         self.font = pygame.font.SysFont("monospace", 12)
 
-        self.controllerServer = None
-
         self.DeviceInfoButton    = pygame.Rect((129, 43),  (100, 100))
         self.UserProgramsButton  = pygame.Rect((375, 167), (100, 100))
 
         self.buttonCooldown   = 180
+
 
     def runHomeScreen(self):
         self.BrainScreen.frame.blit(self.BrainHomeImage, (0, 0))#Draw the home screen
@@ -216,7 +217,7 @@ class Brain(object):
                 self.BrainScreen._drawProgramBar = True
                 self.BrainScreen.clear_screen()
                 self.onProgramScreen = True
-                self.CodeEnviorment  = program.loadContainer(self, self.controllerServer)
+                self.CodeEnviorment  = program.loadContainer(self)
                 self.CodeEnviorment.threadedExecute()
 
     def runDeviceScreen(self):
@@ -257,7 +258,7 @@ class Brain(object):
                 self.BrainScreen._drawProgramBar = True
                 self.BrainScreen.clear_screen()
                 self.onProgramScreen = True
-                self.CodeEnviorment  = program.loadContainer(self, self.controllerServer)
+                self.CodeEnviorment  = program.loadContainer(self)
                 self.CodeEnviorment.threadedExecute()
         
     
