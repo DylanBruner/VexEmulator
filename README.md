@@ -32,7 +32,7 @@
 <br>
 <h2>List of Features</h2>
 
- - "Virtual" SDCard, supports writing to files
+ - "Virtual" SDCard, supports writing to files stored in `data/emulatedstorage/SDCard`
  - Can select/view up to 18 programs on the brain
  - You can check if running on the real brain or the emulated one by checking if any devices have the _attributes attributes, for example
    -  ```python
