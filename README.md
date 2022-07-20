@@ -80,6 +80,7 @@
 <h2>Some things worth mentioning</h2>
  
  - It is possible to create custom devices at the moment but in the future i will be providing a better system for this along with documentation
+ - It is possible to run VEX projects without using the emulator but it's way harder and some functionality might not be there
  - The emulator can be used in your own projects as long as the brains main loop can be called periodically, for example
 
 ```python 
