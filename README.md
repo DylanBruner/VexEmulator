@@ -78,6 +78,8 @@
 
 <br>
 <h2>Vex Mod</h2>
+ 
+ - Vex mod is a "mod" for VEXcode V5 text (not pro!)
 
  - Vex mod currently overlays a yellow run button when a physical brain is not connected, it grabs the current project (must be saved in the emulator's project emulatedstorage folder) by taking a screenshot and extracting the text from it
  - Currently it must be ran seperatly from emulator.py if they are ran togehter the pygame windows get messy
