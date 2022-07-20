@@ -1,4 +1,4 @@
-import time, threading, ctypes, requests
+import time, threading, ctypes
 
 class StoppableThread(threading.Thread):
     def __init__(self, function: callable):

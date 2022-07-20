@@ -113,5 +113,5 @@ for programFile in listdir('data/emulatedstorage/Internal/programs'):
 while True:
     brain.tickmainloop()
     #Updates the screen and does all the other logic, must be called every so often
-    #Unfortunately it can be ran in it's own thread due to pygame limitations
+    #Unfortunately it can't be ran in it's own thread due to pygame limitations
 ```

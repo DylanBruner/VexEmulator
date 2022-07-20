@@ -1,4 +1,4 @@
-import pyautogui, v5mod.pygameoverlay as pygameoverlay, pygame, numpy
+import pyautogui, v5mod.pygameoverlay as pygameoverlay, pygame
 from win32gui import GetWindowText, GetForegroundWindow
 from PIL import Image
 import easyocr

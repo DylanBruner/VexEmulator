@@ -1,7 +1,6 @@
 import threading, json, program
 from vexbrain import Brain
 from httpServer import myhttpserver
-from vexdevices import virtualcontroller
 
 class VirtualInterface(object):
     def __init__(self, addr: tuple, brain: Brain):
