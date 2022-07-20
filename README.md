@@ -1,7 +1,7 @@
 <h1>VEX v5 Brain Emulator</h1>
 <br>
 <br>
-<h2>Note: Vex, if you see this and want me to remove the assets for some reason let me know and i will</h2>
+<h2>Note: Vex, if you see this and want me to remove the assets for some reason create a issue and i'll remove them</h2>
 <br>
 <h2>What it is and isn't</h2>
 
