@@ -30,7 +30,7 @@ Brain
 
  - It is possible to progomaticly check wether or not the code is running on Physical or Emulated brain by checking if
    any of the devices have the attribute ._attributes for example 
-   hasattr(device, "_attributes")
+   hasattr(brain, "_attributes")
 
  - 18 diffrent programs can be ran from the brain, 3 from the home screen and 15 from the user programs screen
  - The User Programs Folder works as mentioned above

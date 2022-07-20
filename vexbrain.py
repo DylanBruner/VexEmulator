@@ -20,6 +20,8 @@ class BrainScreen(object):
         self.size     = size
         self.location = location
 
+        self._attributes = {}
+
         self.inputFrozen = False
 
         self.frame = pygame.Surface(size)

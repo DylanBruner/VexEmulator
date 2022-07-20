@@ -1,6 +1,7 @@
 <h1>VEX v5 Brain Emulator</h1>
 <br>
 <h2>What it is and isn't</h2>
+
  - It's not, a virtual machine that can run C++ programs
     - It is, a pygame powered interface that's capable of running VEX v5python programs
 
@@ -14,7 +15,63 @@
     - It is, a emulator that supports most devices (eventually will support all)
 
 <br>
+<h2>Currently Supported Devices</h2>
+
+- Controller
+- Motor
+- Motor Group
+- Drivetrain
+- Bumper
+- Electro Magnet
+- Gyroscope
+- Optical Sensor (not tested)
+- Distance Sensor
+- Rotation Sensor
+- Inertial Sensor
+
+<br>
 <h2>List of Features</h2>
-<li>
-    <a style="color:white">Hi</a>
-</li>
+
+ - "Virtual" SDCard, supports writing to files
+ - Can select/view up to 18 programs on the brain
+ - You can check if running on the real brain or the emulated one by checking if any devices have the _attributes attributes, for example
+   -  ```python
+      hasattr(brain, '_attributes')
+ - The attributes of all devices can be controlled from the [web server](http://localhost:8080)
+ - Emulates/Redirects functions like Thread, wait to their respective external libraries
+ - Test Competitions can be ran using the webserver as a competition switch 
+
+<br><br>
+<h2>Planned ToDos</h2>
+
+ - For the brain
+    - Clean up code
+    - Legacy mode
+        - Add support for functions VEX changed or removed
+    - Drivetrain w Inertial support!
+    - Make all devices able to be emulated
+    - Maybe use physical controller on the emulated brain not sure about the practicality of this
+    - Register the brain's battery as a emulated device that way the web UI can control it's attributes
+    - Maybe fix the emulator dragging (stop it from snapping)
+    - A CLI interface to start the emulator at a certain point or to start a program without interaction
+    - Ability to take screenshots of the emulator easily
+    - Try to dump assets from the offical brain that way it will look 1000x better
+    - Show which ports are ocupied when a program is running
+    - Maybe a ability to limit the Clock Speed of the emulator along with the max amount of memory it can use
+    - Maybe make all the devices work together, like if the drivetrain is told to move, update the location were supposed to be at and
+        tell all the other devices to update their attributes
+    <br><br>
+    - Interesting Possible Features
+        - Try to inject code into VEX Code that will launch the emulator when the run button is clicked without a brain connected
+            - Or possibly use a virtual serial device and pretend to be a real brain (not sure how hard this would be to do)
+ <br><br><br>   
+ - For the webserver
+    - Make the UI look a lot nicer (pictures!!)
+        - Nicer Input themeing
+    - Use sliders when possible
+    - Make device attributes collapseable
+    - Group / order devices by type
+        - Controller is at top when loaded
+    - Check the brain for variable changes and update them on the site without reloading
+    - Add support for the competition function
+    - Possibly a mobile mode in which it only displays the controller and you can use it like a normal controller
