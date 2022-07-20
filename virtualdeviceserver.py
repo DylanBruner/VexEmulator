@@ -1,4 +1,4 @@
-import threading, json
+import threading, json, program
 from vexbrain import Brain
 from httpServer import myhttpserver
 from vexdevices import virtualcontroller
@@ -17,8 +17,27 @@ class VirtualInterface(object):
         self.server.routes.append(('/api/device/setattribute/<deviceId>/<attribute>/<value>', self.setDeviceAttribute))
         self.server.routes.append(('/api/device/callattribute/<deviceId>/<attribute>', self.callAttribute))
         self.server.routes.append(('/api/interact/brain/<functionString>', self.interactBrain))
+        self.server.routes.append(('/api/program/loadandrun/<programFile>', self.loadAndRun))
 
         threading.Thread(target=self.server.run).start()
+
+    def stopServer(self): self.server.stop()
+
+    def loadAndRun(self, programFile: str):
+        #Stop any currently running program
+        if self.brain.CodeEnviorment != None: self.brain.teardownProgram()
+        prgm = program.ProgramFile(f'data/emulatedstorage/Internal/programs/{programFile}')
+
+        #Get the brain ready to run the program
+        self.brain.onProgramFolderScreen = False; self.brain.BrainScreen._drawProgramBar = True
+        self.brain.onProgramScreen       = True;  self.brain.onHomeScreen = False
+        self.brain.onDeviceScreen        = False; self.brain.BrainScreen.clear_screen()
+
+        #Run the program
+        self.brain.CodeEnviorment = prgm.loadContainer(self.brain)
+        self.brain.CodeEnviorment.threadedExecute()
+
+        return json.dumps({'success': True})
 
     def index(self) -> str:
         with open('data/static/index.html', 'r') as f: return f.read()

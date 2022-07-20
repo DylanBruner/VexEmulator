@@ -203,6 +203,7 @@ class Brain(object):
         self.popups = []
 
         self.legacyMode = False
+        self.CodeEnviorment = None
     
     def legacyModePrompt(self, clicked: str):
         if clicked.lower().strip() == "yes":

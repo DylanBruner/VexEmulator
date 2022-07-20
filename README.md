@@ -77,6 +77,13 @@
     - Possibly a mobile mode in which it only displays the controller and you can use it like a normal controller
 
 <br>
+<h2>Vex Mod</h2>
+
+ - Vex mod currently overlays a yellow run button when a physical brain is not connected, it grabs the current project (must be saved in the emulator's project emulatedstorage folder) by taking a screenshot and extracting the text from it
+ - Currently it must be ran seperatly from emulator.py if they are ran togehter the pygame windows get messy
+ - If i find a way to use injected javascript to do the click events, project name getting and button color changing i will but i haven't found a way at this time
+
+<br>
 <h2>Some things worth mentioning</h2>
  
  - It is possible to create custom devices at the moment but in the future i will be providing a better system for this along with documentation

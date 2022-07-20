@@ -7,6 +7,10 @@ class Server(object):
         self.host   = host
         self.port   = port
         self.routes = []
+
+        self.mainloop = True
+
+    def stop(self): self.mainloop = False
     
     def route(self, url: str, methods=['GET','POST','PUT','DELETE']) -> None:
         def wrapper(func):
@@ -51,7 +55,7 @@ class Server(object):
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.soc.bind((self.host, self.port))
         self.soc.listen(5)
-        while True:
+        while self.mainloop:
             client, addr = self.soc.accept()
             data = client.recv(8024)
             threading.Thread(target=self._handle_request, args=(client, addr, data)).start()
