@@ -59,7 +59,7 @@
     - Show which ports are ocupied when a program is running
     - Maybe a ability to limit the Clock Speed of the emulator along with the max amount of memory it can use
     - Maybe make all the devices work together, like if the drivetrain is told to move, update the location were supposed to be at and
-        tell all the other devices to update their attributes
+        tell all the other devices to update their attributes (Would probably require a fairly exstensive rewrite)
     <br><br>
     - Interesting Possible Features
         - Try to inject code into VEX Code that will launch the emulator when the run button is clicked without a brain connected
