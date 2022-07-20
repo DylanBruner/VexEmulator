@@ -77,7 +77,7 @@ class ProgramFile(object):
 
         CompetitionClass = competitionsupport.CompetitionAttributeStore(brainCore)
         NewContainer.set_global('Competition', CompetitionClass.CompetitionUserFunc)
-        CompetitionClass._id = getRandomString(16); CompetitionClass._type = 'callback'; CompetitionClass._name = 'Competition-Controller'
+        CompetitionClass._id = getRandomString(16); CompetitionClass._type = 'callback'; CompetitionClass._name = 'Competition_Controller'
         brainCore.virtualDevices.append(CompetitionClass)
 
         for device in self.fileData['rconfig']:
