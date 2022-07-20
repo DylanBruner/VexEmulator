@@ -75,3 +75,33 @@
     - Check the brain for variable changes and update them on the site without reloading
     - Add support for the competition function
     - Possibly a mobile mode in which it only displays the controller and you can use it like a normal controller
+
+<br>
+<h2>Some things worth mentioning</h2>
+ 
+ - It is possible to create custom devices at the moment but in the future i will be providing a better system for this along with documentation
+ - The emulator can be used in your own projects as long as the brains main loop can be called periodically, for example
+
+```python 
+from os import listdir
+from vexbrain import Brain
+from virtualdeviceserver import VirtualInterface
+from program import ProgramFile
+
+
+brain = Brain()
+vds   = VirtualInterface(('localhost', 8080), brain)
+
+"""
+Programs are stored in brain.ProgramsLoaded,
+by default (in emulator.py) they are loaded from a folder like shown below
+"""
+
+for programFile in listdir('data/emulatedstorage/Internal/programs'):
+    brain.ProgramsLoaded.append(ProgramFile(f'data/emulatedstorage/Internal/programs/{programFile}'))
+
+while True:
+    brain.tickmainloop()
+    #Updates the screen and does all the other logic, must be called every so often
+    #Unfortunately it can be ran in it's own thread due to pygame limitations
+```
