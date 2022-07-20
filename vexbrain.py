@@ -131,6 +131,7 @@ class BrainScreen(object):
 
 class Brain(object):
     def __init__(self):
+        #This 70 line init really needs to be cleaned up
         self.window = pygame.display.set_mode((674, 466), pygame.NOFRAME)
         self.BrainScreenSize = (480, 272)
 
@@ -199,10 +200,10 @@ class Brain(object):
         self.DeviceInfoButton    = pygame.Rect((129, 43),  (100, 100))
         self.UserProgramsButton  = pygame.Rect((375, 167), (100, 100))
 
-        self.buttonCooldown   = 5000
-        self.popups = []
+        self.buttonCooldown = 5000
+        self.popups         = []
 
-        self.legacyMode = False
+        self.legacyMode     = False
         self.CodeEnviorment = None
     
     def legacyModePrompt(self, clicked: str):
