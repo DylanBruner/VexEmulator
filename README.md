@@ -3,8 +3,7 @@
 <br>
 <h2>Note: Vex, if you see this and want me to remove the assets for some reason create a issue and i'll remove them</h2>
 <br>
-<br>
-<h2This is still very much in development if you find a issue, report it and i'll try to get around to fixing it asap</h2>
+<h2>This is still very much in development if you find a issue, report it and i'll try to get around to fixing it asap</h2>
 <br>
 <h2>What it is and isn't</h2>
 
