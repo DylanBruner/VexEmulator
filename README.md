@@ -50,6 +50,12 @@
  - Emulates/Redirects functions like 'Thread' and 'wait' to their respective external libraries
  - Test Competitions can be ran using the webserver as a competition switch 
  - Screenshot support `s` key
+ - Command line from which you can automatically launch programs, disable or modify the web server, disable program scanning and possibly more in the future
+ - A non-documented api (Same as the api used on the vds, check virtualdeviceserver.py to see all available routes) which can be used to run tests on the brain, or even emulate devices better by editing their attributes
+   - Note the api doesn't require authentication but this isn't really a problome for a few reasons
+     1. This is supposed be used in test enviorments not in production
+     2. It defaults to localhost
+     3. You cant (as of now) run any code you want from the api just files already on the computer
 
 <br><br>
 <h2>Planned ToDos</h2>

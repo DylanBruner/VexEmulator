@@ -42,8 +42,6 @@ class VirtualInterface(object):
         with open('data/static/index.html', 'r') as f: return f.read()
     def indexJs(self) -> str:
         with open('data/static/index.js', 'r') as f: return f.read()
-    def indexCss(self) -> str:
-        with open('data/static/index.css', 'r') as f: return f.read()
 
     def interactBrain(self, functionString):
         try:
