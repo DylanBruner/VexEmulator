@@ -6,6 +6,12 @@ function addDeviceToList(deviceType, deviceName, deviceId){
     document.getElementById(`${deviceType}::${deviceName}(${deviceId})`).innerHTML += '<span class="attributes"></span>'
 }
 
+function toggleAttributesDisplay(span){
+    if (document.getElementById(span).style.display == ''){
+        document.getElementById(span).style.display = 'none'
+    } else {document.getElementById(span).style.display = ''}
+}
+
 function generateDeviceAttributes(elementId, deviceId){
     //Make a fetch request to /api/device/attributes/{deviceId}
     //The response will be json
@@ -14,10 +20,12 @@ function generateDeviceAttributes(elementId, deviceId){
         TargetSpan   = null;
         for (let i = 0; i < ChildElement.length; i++) {
             if (ChildElement[i].tagName == 'SPAN'){
-                ChildElement[i].innerHTML = '<h1>Attributes</h1>'
+                ChildElement[i].id = `DeviceAttributesSpan::${deviceId}`
+                ChildElement[i].outerHTML += `<h3 onclick="toggleAttributesDisplay('DeviceAttributesSpan::${deviceId}')" id="${deviceId}-attributes">Toggle Attributes</h3>`
                 TargetSpan = ChildElement[i]
             }
         }
+
 
         data     = data['attributes']
         dataKeys = Object.keys(data)

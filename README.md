@@ -82,11 +82,9 @@
     - Make the UI look a lot nicer (pictures!!)
         - Nicer Input themeing
     - Use sliders when possible
-    - Make device attributes collapseable
     - Group / order devices by type
         - Controller is at top when loaded
     - Check the brain for variable changes and update them on the site without reloading
-    - Add support for the competition function
     - Possibly a mobile mode in which it only displays the controller and you can use it like a normal controller
 
 <br>
