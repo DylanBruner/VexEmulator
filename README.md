@@ -47,6 +47,7 @@
  - The attributes of all devices can be controlled from the [web server](http://localhost:8080)
  - Emulates/Redirects functions like 'Thread' and 'wait' to their respective external libraries
  - Test Competitions can be ran using the webserver as a competition switch 
+ - Screenshot support `s` key
 
 <br><br>
 <h2>Planned ToDos</h2>
@@ -60,7 +61,6 @@
     - Register the brain's battery as a emulated device that way the web UI can control it's attributes
     - Maybe fix the emulator dragging (stop it from snapping)
     - A CLI interface to start the emulator at a certain point or to start a program without interaction
-    - Ability to take screenshots of the emulator easily
     - Try to dump assets from the offical brain that way it will look 1000x better
     - Show which ports are ocupied when a program is running
     - Maybe a ability to limit the Clock Speed of the emulator along with the max amount of memory it can use

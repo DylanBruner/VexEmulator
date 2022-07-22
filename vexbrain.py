@@ -1,5 +1,6 @@
 import pygame, time, math, pygamepopup, json
-import win32api, win32con, win32gui, threading
+import win32api, win32con, win32gui, threading, os
+from PIL import Image
 
 TransparentColor = (255, 0, 128)
 
@@ -206,6 +207,9 @@ class Brain(object):
         self.legacyMode     = False
         self.CodeEnviorment = None
     
+    def takeScreenshot(self):
+        pygame.image.save(self.BrainScreen.frame, f'data/screenshots/{time.strftime("ScreenShot_%H.%M.%S.png", time.gmtime())}')
+    
     def legacyModePrompt(self, clicked: str):
         if clicked.lower().strip() == "yes":
             self.legacyMode = True
@@ -317,6 +321,11 @@ class Brain(object):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    self.takeScreenshot()
+                    print("[VexEmulator(Brain)] Screenshot taken")
 
         if CheckCollision(self.powerButtonRect) and self.buttonCooldown <= 0:
             self.buttonCooldown = 180
