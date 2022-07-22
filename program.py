@@ -45,6 +45,8 @@ class ProgramFile(object):
         """
         Returns the user code of the program. (anything below #endregion VEXcode)
         """
+        if "#endregion VEXcode" not in self.getTextCode():
+            return self.getTextCode()#This most likely means that the code was generated before VEX made the auto generated code save to the .v5python file
         return '\n'.join(self.getTextCode().split('\n')[self.getTextCode().strip().split('\n').index('#endregion VEXcode Generated Robot Configuration')+1:]).replace('\nfrom vex import *','')
     
     def patchTextCode(self) -> str:
