@@ -53,9 +53,8 @@
 
  - For the brain
     - Clean up code
-    - Legacy mode
-        - Add support for functions VEX changed or removed
     - Drivetrain w Inertial support!
+    - Four motor Drivetrain
     - Make all devices able to be emulated
     - Maybe use physical controller on the emulated brain not sure about the practicality of this
     - Register the brain's battery as a emulated device that way the web UI can control it's attributes
