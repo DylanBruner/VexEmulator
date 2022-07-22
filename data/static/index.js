@@ -23,6 +23,7 @@ function generateDeviceAttributes(elementId, deviceId){
                 ChildElement[i].id = `DeviceAttributesSpan::${deviceId}`
                 ChildElement[i].outerHTML += `<h3 onclick="toggleAttributesDisplay('DeviceAttributesSpan::${deviceId}')" id="${deviceId}-attributes">Toggle Attributes</h3>`
                 TargetSpan = ChildElement[i]
+                toggleAttributesDisplay(`DeviceAttributesSpan::${deviceId}`)
             }
         }
 
