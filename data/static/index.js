@@ -9,7 +9,8 @@ function addDeviceToList(deviceType, deviceName, deviceId){
 function toggleAttributesDisplay(span){
     if (document.getElementById(span).style.display == ''){
         document.getElementById(span).style.display = 'none'
-    } else {document.getElementById(span).style.display = ''}
+        document.getElementById(span.split('::')[1]+'-attributes').innerHTML = 'Show Attributes'
+    } else {document.getElementById(span).style.display = ''; document.getElementById(span.split('::')[1]+'-attributes').innerHTML = 'Hide Attributes'}
 }
 
 function generateDeviceAttributes(elementId, deviceId){
