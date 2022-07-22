@@ -10,7 +10,6 @@ class VirtualInterface(object):
 
         self.server.routes.append(('/', self.index))
         self.server.routes.append(('/index.js', self.indexJs))
-        self.server.routes.append(('/index.css', self.indexCss))
         self.server.routes.append(('/api/devices', self.listDevices))
         self.server.routes.append(('/api/device/attributes/<deviceId>', self.listDeviceAttributes))
         self.server.routes.append(('/api/device/setattribute/<deviceId>/<attribute>/<value>', self.setDeviceAttribute))
