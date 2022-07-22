@@ -1,7 +1,9 @@
 <h1>VEX v5 Brain Emulator</h1>
 <br>
 <br>
-<h2>Note: Vex, if you see this and want me to remove the assets for some reason let me know and i will</h2>
+<h2>Note: Vex, if you see this and want me to remove the assets for some reason create a issue and i'll remove them</h2>
+<br>
+<h2>This is still very much in development if you find a issue, report it and i'll try to get around to fixing it asap</h2>
 <br>
 <h2>What it is and isn't</h2>
 
@@ -41,7 +43,7 @@
    -  ```python
       hasattr(brain, '_attributes')
  - The attributes of all devices can be controlled from the [web server](http://localhost:8080)
- - Emulates/Redirects functions like Thread, wait to their respective external libraries
+ - Emulates/Redirects functions like 'Thread' and 'wait' to their respective external libraries
  - Test Competitions can be ran using the webserver as a competition switch 
 
 <br><br>
