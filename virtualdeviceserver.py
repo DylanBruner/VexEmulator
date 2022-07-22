@@ -54,7 +54,7 @@ class VirtualInterface(object):
         for device in self.brain.virtualDevices:
             devices['devices'].append({
                 'name': device._name,
-                'attributes': device._type,
+                'type': device._type,
                 'id': device._id,
             })
 
