@@ -1,6 +1,5 @@
 import pygame, time, math, pygamepopup, json
-import win32api, win32con, win32gui, threading, os
-from PIL import Image
+import win32api, win32con, win32gui, threading
 
 TransparentColor = (255, 0, 128)
 
