@@ -22,10 +22,12 @@
 <br>
 <h2>Currently Supported Devices</h2>
 
+- All core devices (Non-Three Wire)
+
 - Controller
 - Motor
 - Motor Group
-- Drivetrain
+- Drivetrain (Only 2-Wheel at the moment) (No Inertial, Gps, Gyro)
 - Bumper
 - Electro Magnet
 - Gyroscope
