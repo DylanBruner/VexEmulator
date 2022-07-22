@@ -1,6 +1,8 @@
 import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, time, random, string, competitionsupport
 from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
-from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup, virtualvision, virtualgps
+from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup, virtualvision, virtualgps, virtuallimitswitch, virtualencoder
+from vexdevices import virtualrangefinder, virtuallinetracker, virtuallight, virtualpotentiometer, virtualpotentiometerv2, virtualmotor393
+from vexdevices import virtualservo, virtualled, virtualaccel2g, virtualaccel6g
 
 def getRandomString(length=8) -> str: return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
@@ -20,7 +22,6 @@ class ProgramFile(object):
             'Motor': virtualmotor.Motor,
             'Drivetrain': virtualdrivetrain.Drivetrain,
             'Gyro': virtualgyro.Gyro,
-            'Bumper': virtualbumper.Bumper,
             'Distance': virtualdistance.Distance,
             'Magnet': virtualmagnet.Magnet,
             'Rotation': virtualrotation.Rotation,
@@ -28,6 +29,20 @@ class ProgramFile(object):
             'Inertial': virtualinertial.Inertial,
             'Vision': virtualvision.Vision,
             'GPS': virtualgps.Gps,
+
+            'Bumper': virtualbumper.Bumper,
+            'LimitSwitch': virtuallimitswitch.LimitSwitch,
+            'Encoder': virtualencoder.Encoder,
+            'RangeFinder': virtualrangefinder.RangeFinder,
+            'LineTracker': virtuallinetracker.LineTracker,
+            'Light': virtuallight.Light,
+            'Potentiometer': virtualpotentiometer.Potentiometer,
+            'PotentiometerV2': virtualpotentiometerv2.PotentiometerV2,
+            'Motor393': virtualmotor393.Motor393,
+            'Servo': virtualservo.Servo,
+            'LED': virtualled.Led,
+            'Accel2G': virtualaccel2g.Accel2G,
+            'Accel6G': virtualaccel6g.Accel6G,
         }
     
     def reloadContainerCode(self):

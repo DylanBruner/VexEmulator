@@ -31,4 +31,5 @@ new_globals = {
     'PITCH': 'pitch',
     'ROLL': 'roll',
     'YAW': 'yaw',
+    'TURNS': 'turns'
 }

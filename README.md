@@ -24,19 +24,34 @@
 
 - All core devices (Non-Three Wire)
 
-- Controller
-- Motor
-- Motor Group
-- Drivetrain (Only 2-Wheel at the moment) (No Inertial, Gps or Gyro)
-- Bumper
-- Electro Magnet
-- Gyroscope
-- Optical Sensor (not tested)
-- Distance Sensor
-- Rotation Sensor
-- Inertial Sensor
-- Vision Sensor
-- Gps
+- Core Devices
+    - Controller
+    - Motor
+    - Motor Group
+    - Drivetrain (Only 2-Wheel at the moment) (No Inertial, Gps or Gyro)
+    - Electro Magnet
+    - Gyroscope
+    - Optical Sensor (not tested)
+    - Distance Sensor
+    - Rotation Sensor
+    - Inertial Sensor
+    - Vision Sensor
+    - Gps
+
+- Three wire
+    - Bumper
+    - Limit Switch
+    - Encoder
+    - Range Finder
+    - Line Tracker
+    - Light
+    - Potentiometer
+    - PotentiometerV2
+    - Motor 393
+    - Servo
+    - Led
+    - Accel 2g
+    - Accel 6g
 
 <br>
 <h2>List of Features</h2>
