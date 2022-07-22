@@ -62,7 +62,6 @@
     - Maybe use physical controller on the emulated brain not sure about the practicality of this
     - Register the brain's battery as a emulated device that way the web UI can control it's attributes
     - Maybe fix the emulator dragging (stop it from snapping)
-    - A CLI interface to start the emulator at a certain point or to start a program without interaction
     - Try to dump assets from the offical brain that way it will look 1000x better
     - Show which ports are ocupied when a program is running
     - Maybe a ability to limit the Clock Speed of the emulator along with the max amount of memory it can use
