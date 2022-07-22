@@ -43,7 +43,7 @@
    -  ```python
       hasattr(brain, '_attributes')
  - The attributes of all devices can be controlled from the [web server](http://localhost:8080)
- - Emulates/Redirects functions like Thread, wait to their respective external libraries
+ - Emulates/Redirects functions like 'Thread' and 'wait' to their respective external libraries
  - Test Competitions can be ran using the webserver as a competition switch 
 
 <br><br>
