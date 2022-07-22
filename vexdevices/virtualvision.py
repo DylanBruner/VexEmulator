@@ -9,9 +9,6 @@ class LargestObject(object):
         self.height  = height
         self.angle   = angle
         self.exists  = exists
-
-            
-
 class Vision(object):
     def __init__(self):
         self._attributes = {
@@ -28,15 +25,15 @@ class Vision(object):
     
     def get_largest_object(self) -> LargestObject:
         return LargestObject(
-            id      = self._attributes['id'],
-            originX = self._attributes['originX'],
-            originY = self._attributes['originY'],
-            centerX = self._attributes['centerX'],
-            centerY = self._attributes['centerY'],
-            width   = self._attributes['width'],
-            height  = self._attributes['height'],
-            angle   = self._attributes['angle'],
-            exists  = self._attributes['exists']
+            id      = self._attributes['id']['value'],
+            originX = self._attributes['originX']['value'],
+            originY = self._attributes['originY']['value'],
+            centerX = self._attributes['centerX']['value'],
+            centerY = self._attributes['centerY']['value'],
+            width   = self._attributes['width']['value'],
+            height  = self._attributes['height']['value'],
+            angle   = self._attributes['angle']['value'],
+            exists  = self._attributes['exists']['value']
         )
     
     def take_snapshot(self, signature) -> None: pass
