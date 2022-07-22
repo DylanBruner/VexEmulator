@@ -27,7 +27,7 @@
 - Controller
 - Motor
 - Motor Group
-- Drivetrain (Only 2-Wheel at the moment) (No Inertial, Gps, Gyro)
+- Drivetrain (Only 2-Wheel at the moment) (No Inertial, Gps or Gyro)
 - Bumper
 - Electro Magnet
 - Gyroscope
