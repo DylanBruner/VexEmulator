@@ -1,6 +1,6 @@
 import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, time, random, string, competitionsupport
 from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
-from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup
+from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup, virtualvision
 
 def getRandomString(length=8) -> str: return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
@@ -25,7 +25,8 @@ class ProgramFile(object):
             'Magnet': virtualmagnet.Magnet,
             'Rotation': virtualrotation.Rotation,
             'Optical': virtualoptical.Optical,
-            'Inertial': virtualinertial.Inertial
+            'Inertial': virtualinertial.Inertial,
+            'Vision': virtualvision.Vision
         }
     
     def reloadContainerCode(self):
