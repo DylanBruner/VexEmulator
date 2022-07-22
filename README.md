@@ -33,6 +33,8 @@
 - Distance Sensor
 - Rotation Sensor
 - Inertial Sensor
+- Vision Sensor
+- Gps
 
 <br>
 <h2>List of Features</h2>
