@@ -27,7 +27,7 @@ class ProgramFile(object):
             'Optical': virtualoptical.Optical,
             'Inertial': virtualinertial.Inertial,
             'Vision': virtualvision.Vision,
-            'Gps': virtualgps.Gps,
+            'GPS': virtualgps.Gps,
         }
     
     def reloadContainerCode(self):
