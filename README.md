@@ -22,7 +22,7 @@
 <br>
 <h2>Currently Supported Devices</h2>
 
-- All core devices (Non-Three Wire)
+- All devices
 
 - Core Devices
     - Controller
@@ -38,7 +38,7 @@
     - Vision Sensor
     - Gps
 
-- Three wire
+- Three wire (Most un-tested)
     - Bumper
     - Limit Switch
     - Encoder
@@ -52,6 +52,8 @@
     - Led
     - Accel 2g
     - Accel 6g
+    - Digital In
+    - Digital Out
 
 <br>
 <h2>List of Features</h2>
@@ -79,7 +81,6 @@
     - Clean up code
     - Drivetrain w Inertial support!
     - Four motor Drivetrain
-    - Make all devices able to be emulated
     - Maybe use physical controller on the emulated brain not sure about the practicality of this
     - Register the brain's battery as a emulated device that way the web UI can control it's attributes
     - Maybe fix the emulator dragging (stop it from snapping)

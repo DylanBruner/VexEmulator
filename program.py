@@ -2,7 +2,7 @@ import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximpl
 from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
 from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup, virtualvision, virtualgps, virtuallimitswitch, virtualencoder
 from vexdevices import virtualrangefinder, virtuallinetracker, virtuallight, virtualpotentiometer, virtualpotentiometerv2, virtualmotor393
-from vexdevices import virtualservo, virtualled, virtualaccel2g, virtualaccel6g
+from vexdevices import virtualservo, virtualled, virtualaccel2g, virtualaccel6g, virtualdigitalin, virtualdigitalout
 
 def getRandomString(length=8) -> str: return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
@@ -43,6 +43,8 @@ class ProgramFile(object):
             'LED': virtualled.Led,
             'Accel2G': virtualaccel2g.Accel2G,
             'Accel6G': virtualaccel6g.Accel6G,
+            'DigitalIn': virtualdigitalin.DigitalIn,
+            'DigitalOut': virtualdigitalout.DigitalOut,
         }
     
     def reloadContainerCode(self):
