@@ -1,8 +1,8 @@
 import json, codecontainer, vexbrain, vexunits, prettyemu, vexfunctions, veximplementations, time, random, string, competitionsupport
-from vexdevices import virtualmotor, virtualdrivetrain, virtualgyro, virtualbumper, virtualdistance, virtualmagnet, virtualrotation, virtualoptical
-from vexdevices import virtualcontroller, virtualinertial, virtualmotorgroup, virtualvision, virtualgps, virtuallimitswitch, virtualencoder
-from vexdevices import virtualrangefinder, virtuallinetracker, virtuallight, virtualpotentiometer, virtualpotentiometerv2, virtualmotor393
-from vexdevices import virtualservo, virtualled, virtualaccel2g, virtualaccel6g, virtualdigitalin, virtualdigitalout
+from vexdevices.vexv5 import virtualaccel2g, virtualaccel6g, virtualbumper, virtualcontroller, virtualdigitalin, virtualdigitalout
+from vexdevices.vexv5 import virtualdistance, virtualdrivetrain, virtualencoder, virtualgps, virtualgyro, virtualpotentiometer, virtualpotentiometerv2, virtualrangefinder
+from vexdevices.vexv5 import virtualinertial, virtualled, virtuallight, virtuallimitswitch, virtuallinetracker, virtualoptical
+from vexdevices.vexv5 import virtualrotation, virtualvision, virtualmotor393, virtualservo, virtualmagnet, virtualmotor, virtualmotorgroup
 
 def getRandomString(length=8) -> str: return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
