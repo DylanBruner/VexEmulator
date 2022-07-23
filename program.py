@@ -10,43 +10,64 @@ class ProgramFile(object):
     def __init__(self, filename: str):
         self.fileName = filename
 
-        self.name = self.fileName.split('.v5python')[0]
-        if '/' in self.name: self.name = self.name.split('/')[-1]
+        self.programType = filename.split('.')[1].replace('python','')
+        print('Type:',self.programType)
 
-        self.container = None
+        if self.programType == 'v5':
+            self.name = self.fileName.split('.v5python')[0]
+            if '/' in self.name: self.name = self.name.split('/')[-1]
 
-        with open(self.fileName, 'r') as f: self.fileData = json.load(f)
+            self.container = None
 
-        self.deviceMappings = {
-            'Controller': virtualcontroller.Controller,
-            'Motor': virtualmotor.Motor,
-            'Drivetrain': virtualdrivetrain.Drivetrain,
-            'Gyro': virtualgyro.Gyro,
-            'Distance': virtualdistance.Distance,
-            'Magnet': virtualmagnet.Magnet,
-            'Rotation': virtualrotation.Rotation,
-            'Optical': virtualoptical.Optical,
-            'Inertial': virtualinertial.Inertial,
-            'Vision': virtualvision.Vision,
-            'GPS': virtualgps.Gps,
+            with open(self.fileName, 'r') as f: self.fileData = json.load(f)
 
-            'Bumper': virtualbumper.Bumper,
-            'LimitSwitch': virtuallimitswitch.LimitSwitch,
-            'Encoder': virtualencoder.Encoder,
-            'RangeFinder': virtualrangefinder.RangeFinder,
-            'LineTracker': virtuallinetracker.LineTracker,
-            'Light': virtuallight.Light,
-            'Potentiometer': virtualpotentiometer.Potentiometer,
-            'PotentiometerV2': virtualpotentiometerv2.PotentiometerV2,
-            'Motor393': virtualmotor393.Motor393,
-            'Servo': virtualservo.Servo,
-            'LED': virtualled.Led,
-            'Accel2G': virtualaccel2g.Accel2G,
-            'Accel6G': virtualaccel6g.Accel6G,
-            'DigitalIn': virtualdigitalin.DigitalIn,
-            'DigitalOut': virtualdigitalout.DigitalOut,
-        }
+            self.deviceMappings = {
+                'Controller': virtualcontroller.Controller,
+                'Motor': virtualmotor.Motor,
+                'Drivetrain': virtualdrivetrain.Drivetrain,
+                'Gyro': virtualgyro.Gyro,
+                'Distance': virtualdistance.Distance,
+                'Magnet': virtualmagnet.Magnet,
+                'Rotation': virtualrotation.Rotation,
+                'Optical': virtualoptical.Optical,
+                'Inertial': virtualinertial.Inertial,
+                'Vision': virtualvision.Vision,
+                'GPS': virtualgps.Gps,
+
+                'Bumper': virtualbumper.Bumper,
+                'LimitSwitch': virtuallimitswitch.LimitSwitch,
+                'Encoder': virtualencoder.Encoder,
+                'RangeFinder': virtualrangefinder.RangeFinder,
+                'LineTracker': virtuallinetracker.LineTracker,
+                'Light': virtuallight.Light,
+                'Potentiometer': virtualpotentiometer.Potentiometer,
+                'PotentiometerV2': virtualpotentiometerv2.PotentiometerV2,
+                'Motor393': virtualmotor393.Motor393,
+                'Servo': virtualservo.Servo,
+                'LED': virtualled.Led,
+                'Accel2G': virtualaccel2g.Accel2G,
+                'Accel6G': virtualaccel6g.Accel6G,
+                'DigitalIn': virtualdigitalin.DigitalIn,
+                'DigitalOut': virtualdigitalout.DigitalOut,
+            }
     
+        elif self.programType == 'iq':
+            print('[ProgramFile] Warning IQ programs are not fully supported!')
+            self.name = self.fileName.split('.iqpython')[0]
+            if '/' in self.name: self.name = self.name.split('/')[-1]
+
+            self.container = None
+
+            with open(self.fileName, 'r') as f: self.fileData = json.load(f)
+
+            self.deviceMappings = {
+                'Vision': virtualvision.Vision,
+                'Distance': virtualdistance.Distance,
+                'Motor': virtualmotor.Motor,
+                'Drivetrain': virtualdrivetrain.Drivetrain,
+                'Optical': virtualoptical.Optical,
+            }
+
     def reloadContainerCode(self):
         with open(self.fileName, 'r') as f: self.fileData = json.load(f)
         if self.container is not None:
